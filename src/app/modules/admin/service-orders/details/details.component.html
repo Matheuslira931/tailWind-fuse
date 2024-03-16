@@ -1,0 +1,184 @@
+<div *ngIf="record" class="w-full px-7 py-7">
+    <div class="flex justify-between items-center">
+        <p>
+            Ordem de Serviço #{{record.id}}
+        </p>
+        <div>
+            <!--            <button (click)="openAttachmentOverlay()"-->
+            <!--                    class="ml-4"-->
+            <!--                    mat-raised-button>-->
+            <!--                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>-->
+            <!--                <span class="ml-2 mr-1">Adicionar Anexo</span>-->
+            <!--            </button>-->
+            <button (click)="closeDrawer()"
+                    class="ml-4"
+                    mat-raised-button>
+                <mat-icon svgIcon="arrow_back"></mat-icon>
+                <span class="ml-2 mr-1">Voltar</span>
+            </button>
+            <button class="ml-4"
+                    mat-raised-button>
+                <mat-icon svgIcon="feather:settings"></mat-icon>
+                <span class="ml-2 mr-1">Opções</span>
+            </button>
+            <!--            <button [color]="'primary'"-->
+            <!--                    class="ml-4"-->
+            <!--                    mat-flat-button>-->
+            <!--                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>-->
+            <!--                <span class="ml-2 mr-1">Novo</span>-->
+            <!--            </button>-->
+            <button [color]="'primary'"
+                    class="ml-4"
+                    mat-flat-button>
+                <mat-icon svgIcon="print"></mat-icon>
+                <span class="ml-2 mr-1">Imprimir</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-4 py-6">
+        <div class="col-span-2">
+            <app-card-options *ngIf="record" [options]="identificationOptions" title="Identicação">
+
+                <div class="mt-2 flex">
+                    <mat-icon [svgIcon]="'heroicons_outline:exclamation-circle'"></mat-icon>
+                    <div class="ml-6 leading-6">
+                        {{record.numeropedido}} • Aberta
+                    </div>
+                </div>
+
+                <div class="mt-2 flex">
+                    <mat-icon [svgIcon]="'heroicons_outline:exclamation-circle'"></mat-icon>
+                    <div class="ml-6 leading-6">
+                        {{record.datahora | date : 'dd/MM/yyyy'}} • Data de Criação
+                    </div>
+                </div>
+
+                <div class="mt-2 flex">
+                    <mat-icon [svgIcon]="'heroicons_outline:exclamation-circle'"></mat-icon>
+                    <div class="ml-6 leading-6">
+                        {{record.prazoautorizacao | date : 'dd/MM/yyyy'}} • Prazo de Autorização
+                    </div>
+                </div>
+
+                <div *ngFor="let collaborators of record.collaborators" class="mt-2 flex">
+                    <mat-icon [svgIcon]="'heroicons_outline:exclamation-circle'"></mat-icon>
+                    <div class="ml-6 leading-6">
+                        {{collaborators.pessoa_id}}
+                    </div>
+                </div>
+
+            </app-card-options>
+        </div>
+        <div class="col-span-1">
+            <app-card-options *ngIf="record && company" [options]="contractorOptions" title="Contratante">
+                <ng-container *ngFor="let serviceOrder of record.serviceOrderHolder">
+                    <div class="mt-2 flex">
+                        <mat-icon [svgIcon]="'heroicons_outline:exclamation-circle'"></mat-icon>
+                        <div class="ml-6 leading-6">
+                            {{company.cnpj | cnpj}}
+                        </div>
+                    </div>
+
+                    <div class="mt-2 flex">
+                        <mat-icon [svgIcon]="'heroicons_outline:exclamation-circle'"></mat-icon>
+                        <div class="ml-6 leading-6">
+                            {{company.razaosocial || company.fantasia | titlecase}}
+                        </div>
+                    </div>
+                </ng-container>
+            </app-card-options>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 py-6">
+        <app-card-options *ngIf="record" [options]="serviceOptions" title="Serviços">
+            <table [dataSource]="record.services" class="mat-elevation-z8" mat-table>
+
+                <ng-container matColumnDef="petitionName">
+                    <th *matHeaderCellDef mat-header-cell>
+                        Petição
+                    </th>
+                    <td *matCellDef="let element" mat-cell>
+                        {{element.petitionName}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="typeDescription">
+                    <th *matHeaderCellDef mat-header-cell>
+                        Tipo
+                    </th>
+                    <td *matCellDef="let element" mat-cell>
+                        {{element.typeDescription}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fullDescription">
+                    <th *matHeaderCellDef mat-header-cell>
+                        Descrição
+                    </th>
+                    <td *matCellDef="let element" mat-cell>
+                        {{element.fullDescription}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="term">
+                    <th *matHeaderCellDef mat-header-cell>
+                        Prazo
+                    </th>
+                    <td *matCellDef="let element" mat-cell>
+                        {{element.term | date : 'dd/MM/yyyy'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="value">
+                    <th *matHeaderCellDef mat-header-cell>
+                        Valor
+                    </th>
+                    <td *matCellDef="let element" mat-cell>
+                        {{element.value | currency : 'BRL'}}
+                    </td>
+                </ng-container>
+
+                <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+                <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+            </table>
+        </app-card-options>
+    </div>
+
+    <div class="grid grid-cols-3 gap-4 py-6">
+        <div class="col-span-1">
+            <app-card-options *ngIf="record && company" [options]="contractorOptions" title="Dados Financeiros">
+                <div
+                    class="flex container-border mr-3 mb-3 leading-normal text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700 flex-col">
+                    <div class="flex w-full justify-between">
+                        <span class="text-sm font-medium whitespace-nowrap">
+                            Total
+                        </span>
+                        <span class="text-sm font-medium whitespace-nowrap">
+                            {{record.valorpedido | currency : 'BRL'}}
+                        </span>
+                    </div>
+                    <div class="flex w-full justify-between mt-4 border-top">
+                        <span class="text-sm font-medium whitespace-nowrap">
+                            Desconto
+                        </span>
+                        <span class="text-sm font-medium whitespace-nowrap">
+                            {{record.valordesconto | currency : 'BRL'}}
+                        </span>
+                    </div>
+                    <div class="flex w-full justify-end mt-4 border-top">
+                        <span class="text-sm font-medium whitespace-nowrap">
+                            {{(record.valorpedido - record.valordesconto) | currency : 'BRL'}}
+                        </span>
+                    </div>
+                </div>
+            </app-card-options>
+        </div>
+        <div class="col-span-2">
+            <app-card-options *ngIf="record" [options]="serviceOptions" title="Serviços">
+                <app-input-table [account]="record.account" [rows]="4"></app-input-table>
+            </app-card-options>
+        </div>
+    </div>
+</div>

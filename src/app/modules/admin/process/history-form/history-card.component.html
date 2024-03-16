@@ -1,0 +1,154 @@
+<li *ngIf="history.type === 1"
+    class="relative flex py-7 history-card">
+
+    <div *ngIf="showConnectionLine"
+         class="absolute top-7 left-5 w-0.5 h-full -ml-px bg-gray-300 dark:bg-gray-600"></div>
+
+    <div class="relative flex flex-auto">
+        <!-- Icon -->
+        <div
+            class="flex shrink-0 items-center justify-center w-10 h-10 mr-4 rounded-full bg-gray-400">
+            <mat-icon
+                [svgIcon]="'heroicons_solid:star'"
+                class="icon-size-5 text-white">
+            </mat-icon>
+        </div>
+
+        <!-- Content -->
+        <div class="flex flex-col flex-auto items-start">
+            <!-- Description -->
+            <ng-container *ngIf="history.movement">
+                <div class="w-full flex justify-between items-center">
+                    <span>
+                        {{ history.movement }}
+                    </span>
+                    <mat-icon [matMenuTriggerFor]="menu" class="cursor-pointer"
+                              svgIcon="feather:more-vertical"></mat-icon>
+                    <mat-menu #menu="matMenu">
+                        <button (click)="openCardDetails(history)"
+                                class="cursor-pointer"
+                                mat-menu-item>
+                            Editar
+                        </button>
+                    </mat-menu>
+                </div>
+            </ng-container>
+            <div
+                class="flex flex-col sm:flex-row sm:items-center mt-2 sm:mt-1 sm:space-x-2 text-md leading-5">
+                <!-- Date -->
+                <div class="text-secondary">
+                    <span>
+                        {{history.date | date:'dd/MM/yyyy'}} RPI {{history.rpi}}
+                    </span>
+                </div>
+            </div>
+            <div class="mt-4 py-4 px-5 rounded-lg bg-gray-200 dark:bg-gray-800">
+                {{history.description}}
+                {{history.dispatchComplement}}
+            </div>
+        </div>
+    </div>
+</li>
+
+<li *ngIf="history.type === 2" class="relative flex py-7 history-card">
+
+    <div *ngIf="showConnectionLine"
+         class="absolute top-7 left-5 w-0.5 h-full -ml-px bg-gray-300 dark:bg-gray-600"></div>
+
+    <div class="relative flex flex-auto">
+        <!-- Icon -->
+        <div
+            class="flex shrink-0 items-center justify-center w-10 h-10 mr-4 rounded-full bg-gray-400">
+            <mat-icon
+                [svgIcon]="'heroicons_solid:star'"
+                class="icon-size-5 text-white">
+            </mat-icon>
+        </div>
+
+        <!-- Content -->
+        <div class="flex flex-col flex-auto items-start">
+            <!-- Description -->
+            <ng-container *ngIf="history.movement">
+                <div class="w-full flex justify-between items-center">
+                    <span>
+                        {{ history.movement }}
+                    </span>
+                    <mat-icon [matMenuTriggerFor]="menu" class="cursor-pointer"
+                              svgIcon="feather:more-vertical"></mat-icon>
+                    <mat-menu #menu="matMenu">
+                        <button (click)="openCardDetails(history)"
+                                mat-menu-item>
+                            Editar
+                        </button>
+                    </mat-menu>
+                </div>
+            </ng-container>
+            <div
+                class="flex flex-col sm:flex-row sm:items-center mt-2 sm:mt-1 sm:space-x-2 text-md leading-5">
+                <!-- Date -->
+                <div class="text-secondary">
+                    <p>
+                        OS {{history.id}} • {{history.date | date:'dd/MM/yyyy'}}
+                    </p>
+                    <p>
+                        OS Autorizado em {{history.date | date:'dd/MM/yyyy'}}
+                    </p>
+                    <p>
+                        Protocolo n° {{history.protocolNumber}}
+                        • {{history.createdAt | date:'dd/MM/yyyy'}}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</li>
+
+<li *ngIf="history.type === 3" class="relative flex py-7 history-card">
+
+    <div *ngIf="showConnectionLine"
+         class="absolute top-7 left-5 w-0.5 h-full -ml-px bg-gray-300 dark:bg-gray-600"></div>
+
+    <div class="relative flex flex-auto">
+        <!-- Icon -->
+        <div
+            class="flex shrink-0 items-center justify-center w-10 h-10 mr-4 rounded-full bg-gray-400">
+            <mat-icon
+                [svgIcon]="'heroicons_solid:star'"
+                class="icon-size-5 text-white">
+            </mat-icon>
+        </div>
+
+        <!-- Content -->
+        <div class="flex flex-col flex-auto items-start">
+            <!-- Description -->
+            <ng-container *ngIf="history.movement">
+                <div class="w-full flex justify-between items-center">
+                    <span>
+                        {{ history.movement }}
+                    </span>
+                    <mat-icon [matMenuTriggerFor]="menu" class="cursor-pointer"
+                              svgIcon="feather:more-vertical"></mat-icon>
+                    <mat-menu #menu="matMenu">
+                        <button (click)="openCardDetails(history)"
+                                mat-menu-item>
+                            Editar
+                        </button>
+                    </mat-menu>
+                </div>
+            </ng-container>
+
+            <div
+                class="flex flex-col sm:flex-row sm:items-center mt-2 sm:mt-1 sm:space-x-2 text-md leading-5">
+                <!-- Date -->
+                <div class="text-secondary">
+                    <p>
+                        {{ history.date | date : 'dd/MM/yyyy'}}
+                    </p>
+                    <p>
+                        {{ history.description }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</li>

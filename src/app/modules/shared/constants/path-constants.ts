@@ -1,0 +1,13 @@
+export const USER_ROUTE = '/users/';
+export const POSITIONS_ROUTE = '/records/positions/';
+export const CUSTOMER_ROUTE = '/customers/';
+export const PROCESS_ROUTE = '/brandingprocesses/';
+export const COLLABORATORS_ROUTE = '/collaborators/';
+export const CITY_ROUTE = '/records/cities/';
+export const STATE_ROUTE = '/records/states/';
+export const COUNTRY_ROUTE = '/records/countries/';
+export const PAYMENT_METHOD = '/records/paymentmethods/';
+export const CONTACT_TYPE_ROUTE = '/records/contacttypes/';
+export const COMPANY_SIZE_ROUTE = '/records/companysizes/';
+export const SERVICE_ORDER_ROUTE = '/serviceorders/';
+export const MOVEMENTS_ROUTE = '/movements/';

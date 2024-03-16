@@ -1,0 +1,33 @@
+<div [ngClass]="{
+        'mt-10': hasTopMargin,
+        'bg-gray-50 dark:bg-transparent': showBackground
+    }"
+     class="w-full flex items-center py-4 pr-4 pl-1 border-t">
+    <!-- Delete -->
+    <button
+        (click)="emitDeleteEvent()"
+        *ngIf="(record && record?.id) || showRemoveButton"
+        [color]="'warn'"
+        [matTooltip]="'Excluir'"
+        mat-button>
+        Excluir
+    </button>
+    <!-- Cancel -->
+    <button
+        (click)="cancel.emit()"
+        [matTooltip]="'Cancelar'"
+        class="ml-auto"
+        mat-button>
+        Cancelar
+    </button>
+    <!-- Save -->
+    <button
+        (click)="emitSaveEvent()"
+        [color]="'primary'"
+        [disabled]="saveDisabled"
+        [matTooltip]="'Salvar'"
+        class="ml-2"
+        mat-flat-button>
+        Salvar
+    </button>
+</div>

@@ -1,0 +1,39 @@
+<div class="flex flex-col w-full h-full">
+
+    <!-- Header -->
+    <app-details-header (onClose)="closeDrawer()"
+                        (onEdit)="toggleEditMode(true)"
+                        [imageLabel]="record?.nome || record?.razaosocial"
+                        [viewMode]="!editMode"></app-details-header>
+
+    <!-- View mode -->
+    <ng-container *ngIf="!editMode">
+        <ng-container *ngIf="showPessoaFisicaForm; else pjForm">
+            <app-customer-pf-view [customer]="record"></app-customer-pf-view>
+        </ng-container>
+
+        <ng-template #pjForm>
+            <app-customer-pj-view [customer]="record"></app-customer-pj-view>
+        </ng-template>
+    </ng-container>
+
+    <!-- Edit mode -->
+    <ng-container *ngIf="editMode">
+        <ng-container *ngIf="showPessoaFisicaForm; else pjForm">
+            <app-customer-pf-form #pfForm
+                                  (cancel)="toggleEditMode()"
+                                  (delete)="delete()"
+                                  [customer]="record"
+                                  (save)="save()"
+                                  [editMode]="editMode"></app-customer-pf-form>
+        </ng-container>
+        <ng-template #pjForm>
+            <app-customer-pj-form #pjFormComponent
+                                  (delete)="delete()"
+                                  (save)="save()"
+                                  (cancel)="toggleEditMode()"
+                                  [customer]="record"
+                                  [editMode]="editMode"></app-customer-pj-form>
+        </ng-template>
+    </ng-container>
+</div>

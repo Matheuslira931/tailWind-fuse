@@ -1,0 +1,86 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+    <mat-drawer-container (backdropClick)="closeDrawer()" class="flex-auto h-full bg-card dark:bg-transparent">
+
+        <!-- Drawer -->
+        <mat-drawer
+                class="w-full md:w-160 dark:bg-gray-900"
+                [mode]="'over'"
+                [opened]="false"
+                [position]="'end'"
+                [disableClose]="true"
+                #matDrawer>
+            <router-outlet></router-outlet>
+        </mat-drawer>
+
+        <mat-drawer-content class="flex flex-col">
+
+            <!-- Main -->
+            <div class="flex-auto">
+                <!-- Header -->
+                <app-list-header (newRecord)="create()"
+                                 (search)="search($event)"
+                                 [isLoading]="isLoading"
+                                 [title]="listTitle">
+                </app-list-header>
+
+                <!-- Contacts list -->
+                <div class="h-full relative">
+                    <ng-container *ngIf="records$ | async as roles">
+                        <ng-container *ngIf="roles.records.length; else noRecords">
+                            <ng-container *ngFor="let position of roles.records; let i = index; trackBy: trackByFn">
+                                <!-- Group -->
+                                <ng-container
+                                        *ngIf="i === 0 || position.nome.charAt(0) !== roles.records[i - 1].nome.charAt(0)">
+                                    <div class="z-10 sticky top-0 -mt-px px-6 py-1 md:px-8 border-t border-b font-medium uppercase text-secondary bg-gray-50 dark:bg-gray-900">
+                                        {{position.nome?.charAt(0)}}
+                                    </div>
+                                </ng-container>
+                                <!-- Contact -->
+                                <a class="z-20 flex items-center px-6 py-4 md:px-8 cursor-pointer border-b justify-between"
+                                   [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedRecord || selectedRecord.id !== position.id,
+                                                'bg-primary-50 dark:bg-hover': selectedRecord && selectedRecord.id === position.id}"
+                                   [routerLink]="['./', position.id]">
+                                    <div class="flex items-center">
+                                        <div class="flex flex-0 items-center justify-center w-10 h-10 rounded-full overflow-hidden">
+                                            <div class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                                                {{position.nome[0]}}
+                                            </div>
+                                        </div>
+                                        <div class="min-w-0 ml-4">
+                                            <div class="font-medium leading-5 truncate">
+                                                {{position.nome}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+
+                    <!-- No roles -->
+                    <ng-template #noRecords>
+                        <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">
+                            Sem registros!
+                        </div>
+                    </ng-template>
+                    <mat-paginator
+                        #paginator
+                        (page)="handlePageEvent($event)"
+                        [length]="length"
+                        [pageIndex]="pageIndex"
+                        [pageSizeOptions]="pageSizeOptions"
+                        [pageSize]="pageSize"
+                        [showFirstLastButtons]="true"
+                        aria-label="Selecione a página"
+                        class="paginator"
+                    >
+                    </mat-paginator>
+                </div>
+
+            </div>
+
+        </mat-drawer-content>
+
+    </mat-drawer-container>
+
+</div>

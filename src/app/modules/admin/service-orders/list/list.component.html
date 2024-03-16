@@ -1,0 +1,135 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+    <mat-drawer-container (backdropClick)="closeDrawer()" class="flex-auto h-full bg-card dark:bg-transparent">
+
+        <!-- Drawer -->
+        <mat-drawer
+            #matDrawer
+            [disableClose]="true"
+            [mode]="'over'"
+            [opened]="false"
+            [position]="'end'"
+            class="w-full md:w-full dark:bg-gray-900">
+            <router-outlet></router-outlet>
+        </mat-drawer>
+
+        <mat-drawer-content class="flex flex-col">
+
+            <!-- Main -->
+            <div class="flex-auto">
+                <!-- Header -->
+                <app-list-header (newRecord)="create()"
+                                 (search)="search($event)"
+                                 [isLoading]="isLoading"
+                                 [showBorder]="false"
+                                 [subtitle]="subTitle"
+                                 [title]="listTitle">
+                </app-list-header>
+
+                <app-list-selector (chose)="onChooseCollaborator($event)"
+                                   (clearFilter)="onClearFilter()"
+                                   [collaborators]="collaborators"></app-list-selector>
+
+                <div class="flex flex-auto md:overflow-hidden">
+                    <div class="flex flex-col flex-auto">
+                        <ng-container *ngIf="records$ | async as page">
+                            <ng-container *ngIf="page.records.length; else noRecords">
+                                <ng-container *ngIf="page.records && page.totalRecords; else noRecords">
+                                    <table>
+                                        <!-- Header -->
+                                        <tr class="inventory-grid grid py-4 px-6 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5">
+                                            <th class="text-start">N° OS</th>
+                                            <th class="text-start optional-columns">Data de Criação</th>
+                                            <th class="sm:block text-start">
+                                                Titular
+                                            </th>
+                                            <th class="hidden lg:block optional-columns text-start">
+                                                Valor
+                                            </th>
+                                            <th class="hidden lg:block optional-columns text-start">
+                                                Situação
+                                            </th>
+                                            <th class="hidden lg:block text-start">
+                                                Prazo
+                                            </th>
+                                            <th class="hidden lg:block text-start">
+                                                Prioridade
+                                            </th>
+                                        </tr>
+                                        <!-- ROWS -->
+                                        <tr *ngFor="let item of page.records; trackBy: trackByFn">
+                                            <div [routerLink]="['./', item.id]"
+                                                 class="grid inventory-grid items-center py-3 px-6 border-b cursor-pointer">
+                                                <td class="truncate">
+                                                    {{item.numeroPedido}}
+                                                </td>
+                                                <td class="truncate optional-columns">
+                                                    {{item.dataCriacao | date : 'dd/MM/yyyy'}}
+                                                </td>
+                                                <td class="avoid-text-break sm:block">
+                                                    {{item.titular | titlecase}}
+                                                </td>
+                                                <td class="hidden sm:block optional-columns">
+                                                    {{item.valor | currency :'BRL'}}
+                                                </td>
+                                                <td class="hidden lg:block optional-columns">
+                                                    {{item.situacao}}
+                                                </td>
+                                                <td class="hidden lg:block optional-columns">
+                                                    {{item.prazoautorizacao | date : 'dd/MM/yyyy'}}
+                                                </td>
+                                                <td class="hidden lg:block">
+                                                    <span
+                                                        class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50">
+                                                        <span class="leading-relaxed whitespace-nowrap">
+                                                        Alta
+                                                    </span>
+                                                    </span>
+                                                    <span *ngIf="false"
+                                                          class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50">
+                                                        <span class="leading-relaxed whitespace-nowrap">
+                                                        Alta
+                                                    </span>
+                                                    </span>
+                                                    <span *ngIf="false"
+                                                          class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50">
+                                                        <span class="leading-relaxed whitespace-nowrap">
+                                                            pending
+                                                        </span>
+                                                    </span>
+                                                </td>
+                                            </div>
+                                        </tr>
+                                    </table>
+                                </ng-container>
+                            </ng-container>
+                        </ng-container>
+
+                        <ng-template #noRecords>
+                            <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">
+                                {{ emptyMessage }}
+                            </div>
+                        </ng-template>
+
+                        <mat-paginator
+                            #paginator
+                            (page)="handlePageEvent($event)"
+                            [length]="length"
+                            [ngClass]="{ 'pointer-events-none': isLoading }"
+                            [pageIndex]="pageIndex"
+                            [pageSizeOptions]="pageSizeOptions"
+                            [pageSize]="pageSize"
+                            [showFirstLastButtons]="true"
+                            aria-label="Selecione a página"
+                        >
+                        </mat-paginator>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </mat-drawer-content>
+
+    </mat-drawer-container>
+
+</div>

@@ -1,0 +1,142 @@
+<ng-container [formGroup]="form">
+    <!-- País -->
+    <div>
+        <mat-form-field appearance="fill" class="w-full">
+            <mat-label>País</mat-label>
+            <mat-icon class="hidden sm:flex icon-size-5"
+                      matPrefix
+                      svgIcon="mat_outline:location_on"></mat-icon>
+            <input [formControlName]="'pais'"
+                   [matAutocomplete]="country"
+                   aria-label="País"
+                   matInput
+                   placeholder="Selecione um país"
+                   type="text">
+            <mat-autocomplete #country="matAutocomplete" [displayWith]="getName">
+                <mat-option *ngFor="let country of countries" [value]="country">
+                    {{ country.nome }}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </div>
+
+    <!-- Estado -->
+    <div class="mt-1">
+        <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Estado</mat-label>
+            <mat-icon class="hidden sm:flex icon-size-5"
+                      matPrefix
+                      svgIcon="mat_outline:location_on"></mat-icon>
+            <input [formControlName]="'estado'"
+                   [matAutocomplete]="state"
+                   aria-label="Estado"
+                   matInput
+                   placeholder="Selecione um estado"
+                   type="text">
+            <mat-autocomplete #state="matAutocomplete" [displayWith]="getName">
+                <mat-option *ngFor="let state of states" [value]="state">
+                    {{ state.nome }}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </div>
+
+    <!-- Municipio -->
+    <div class="mt-1">
+        <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Município</mat-label>
+            <mat-icon class="hidden sm:flex icon-size-5"
+                      matPrefix
+                      svgIcon="mat_outline:location_on"></mat-icon>
+            <input [disabled]="this.states === []"
+                   [formControlName]="'municipio'"
+                   [matAutocomplete]="city"
+                   aria-label="Municipio"
+                   matInput
+                   placeholder="Selecione um município"
+                   type="text">
+            <mat-autocomplete #city="matAutocomplete" [displayWith]="getName">
+                <mat-option *ngFor="let city of cities" [value]="city">
+                    {{ city.nome | titlecase }}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </div>
+
+    <!-- Endereço -->
+    <div class="mt-1">
+        <mat-form-field
+                class="w-full">
+            <mat-label>Rua</mat-label>
+            <mat-icon class="hidden sm:flex icon-size-5"
+                      matPrefix
+                      svgIcon="mat_outline:location_on"></mat-icon>
+            <input [formControlName]="'endereco'"
+                   [placeholder]="'Endereço'"
+                   [spellcheck]="false"
+                   matInput>
+        </mat-form-field>
+    </div>
+
+    <!-- Número -->
+    <div class="mt-1">
+        <mat-form-field
+                class="w-full">
+            <mat-label>Número</mat-label>
+            <mat-icon class="hidden sm:flex icon-size-5"
+                      matPrefix
+                      svgIcon="mat_outline:location_on"></mat-icon>
+            <input [formControlName]="'numero'"
+                   [placeholder]="'Número'"
+                   [spellcheck]="false"
+                   matInput
+                   type="number">
+        </mat-form-field>
+    </div>
+
+    <!-- Complemento -->
+    <div class="mt-1">
+        <mat-form-field
+                class="w-full">
+            <mat-label>Complemento</mat-label>
+            <mat-icon class="hidden sm:flex icon-size-5"
+                      matPrefix
+                      svgIcon="mat_outline:location_on"></mat-icon>
+            <input [formControlName]="'complemento'"
+                   [placeholder]="'Complemento'"
+                   [spellcheck]="false"
+                   matInput>
+        </mat-form-field>
+    </div>
+
+    <!-- Bairro -->
+    <div class="mt-1">
+        <mat-form-field
+                class="w-full">
+            <mat-label>Bairro</mat-label>
+            <mat-icon class="hidden sm:flex icon-size-5"
+                      matPrefix
+                      svgIcon="mat_outline:location_on"></mat-icon>
+            <input [formControlName]="'bairro'"
+                   [placeholder]="'Bairro'"
+                   [spellcheck]="false"
+                   matInput>
+        </mat-form-field>
+    </div>
+
+    <!-- CEP -->
+    <div class="mt-1">
+        <mat-form-field
+                class="w-full">
+            <mat-label>CEP</mat-label>
+            <mat-icon class="hidden sm:flex icon-size-5"
+                      matPrefix
+                      svgIcon="mat_outline:location_on"></mat-icon>
+            <input [formControlName]="'cep'"
+                   [placeholder]="'CEP'"
+                   [spellcheck]="false"
+                   matInput>
+        </mat-form-field>
+    </div>
+
+</ng-container>

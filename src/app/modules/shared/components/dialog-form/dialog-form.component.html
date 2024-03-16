@@ -1,0 +1,18 @@
+<div>
+    <div class="header mb-2 p-3 content-between">
+        <p>
+            {{title}}
+        </p>
+        <mat-icon (click)="cancel.emit()" svgIcon="heroicons_outline:x-circle"></mat-icon>
+    </div>
+    <div>
+        <ng-content></ng-content>
+    </div>
+
+    <div class="mt-1 mr-2">
+        <app-actions-form (delete)="delete.emit()"
+                          (save)="save.emit()"
+                          (cancel)="cancel.emit()"
+                          [hasTopMargin]="false"></app-actions-form>
+    </div>
+</div>

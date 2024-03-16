@@ -1,0 +1,95 @@
+<div class="flex flex-col w-full">
+    <app-details-header class="flex flex-col w-full"
+                        [imageLabel]="record?.brandingProcess[0]?.elementonominativo"
+                        (onClose)="onCancel()"></app-details-header>
+
+    <div class="flex flex-auto">
+        <form [formGroup]="form"
+              class="flex flex-col flex-auto overflow-y-auto">
+            <div class="pb-6 ps-6 pe-6 sm:pb-8 sm:ps-8 sm:pe-8">
+                <mat-form-field
+                    [subscriptSizing]="'dynamic'"
+                    class="w-full mb-4">
+                    <mat-label>Elemento Nominativo</mat-label>
+                    <input
+                        [formControlName]="'title'"
+                        [spellcheck]="false"
+                        matInput>
+                </mat-form-field>
+
+                <mat-form-field class="w-full mb-4">
+                    <mat-icon
+                        [svgIcon]="'heroicons_outline:users'"
+                        class="hidden sm:flex icon-size-5"
+                        matPrefix></mat-icon>
+                    <mat-label>Titular</mat-label>
+                    <input [formControlName]="'titular'"
+                           [matAutocomplete]="titular"
+                           aria-label="Estado Civil"
+                           matInput
+                           placeholder="Selecione um titular"
+                           type="text">
+                    <mat-autocomplete #titular="matAutocomplete" [displayWith]="getCustomerName">
+                        <mat-option *ngFor="let customer of customerList" [value]="customer">
+                            {{ customer.descricao | titlecase }}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+
+
+                <mat-form-field
+                    [subscriptSizing]="'dynamic'"
+                    class="w-full mb-4">
+                    <mat-label>Número Processo</mat-label>
+                    <input
+                        [formControlName]="'title'"
+                        [spellcheck]="false"
+                        matInput>
+                </mat-form-field>
+
+                <div class="w-full flex items-center">
+                    <div class="w-1/2">
+                        <mat-form-field
+                            [subscriptSizing]="'dynamic'"
+                            class="w-full mb-4">
+                            <mat-label>Apresentação</mat-label>
+                            <input
+                                [formControlName]="'title'"
+                                [spellcheck]="false"
+                                matInput>
+                        </mat-form-field>
+                    </div>
+                    <div class="w-1/2">
+                        <app-chip-button label="Selecionar Logomarca" icon="heroicons_solid:pencil-square">
+                        </app-chip-button>
+                    </div>
+                </div>
+
+                <mat-form-field
+                    [subscriptSizing]="'dynamic'"
+                    class="w-full mb-4">
+                    <mat-label>Classe</mat-label>
+                    <input
+                        [formControlName]="'title'"
+                        [spellcheck]="false"
+                        matInput>
+                </mat-form-field>
+
+                <mat-form-field
+                    [subscriptSizing]="'dynamic'"
+                    class="w-full mb-4">
+                    <mat-label>Especificações</mat-label>
+                    <input
+                        [formControlName]="'title'"
+                        [spellcheck]="false"
+                        matInput>
+                </mat-form-field>
+            </div>
+
+            <app-actions-form (cancel)="onCancel()"
+                              (save)="onSave()"
+                              [showBackground]="false"></app-actions-form>
+        </form>
+    </div>
+
+</div>

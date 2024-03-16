@@ -1,0 +1,58 @@
+<!-- Header -->
+<div class="relative w-full sm:h-30 px-8 sm:px-12 bg-accent-100 dark:bg-accent-700">
+    <!-- Background -->
+    <img class="absolute inset-0 object-cover w-full h-full bg-gray-900">
+    <!-- Close button -->
+    <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-8 pb-4">
+        <button
+            class="z-20"
+            (click)="close()"
+            [matTooltip]="'Fechar'"
+            mat-icon-button>
+            <mat-icon [svgIcon]="'heroicons_outline:x-mark'"
+                      class="text-white"></mat-icon>
+        </button>
+    </div>
+</div>
+
+<!-- Customer -->
+<div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:px-12 sm:pt-0">
+    <div class="w-full max-w-3xl">
+        <!-- Avatar and actions -->
+        <div class="flex flex-auto items-end -mt-16">
+            <!-- Avatar -->
+            <div *ngIf="showImage"
+                 [ngClass]="{'rounded-full' : imageStyle === 'rounded'}"
+                 class="flex items-center justify-center w-32 h-32 overflow-hidden ring-4 ring-bg-card">
+                <div (click)="openFileWindow()"
+                     *ngIf="uploadPicture && !viewMode"
+                     class="flex items-center justify-center w-full h-full rounded overflow-hidden uppercase text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200 cursor-pointer">
+                    <mat-icon *ngIf="!loadedPicture"
+                              svgIcon="heroicons_outline:camera"></mat-icon>
+                    <img *ngIf="loadedPicture"
+                         [src]="imageSrc || imageUrl" alt="user-picture">
+                    <input #inputFile (change)="uploadFile($event)" class="hidden" type="file">
+                </div>
+                <div *ngIf="!uploadPicture || viewMode"
+                     class="flex items-center justify-center w-full h-full rounded overflow-hidden uppercase text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                    <img *ngIf="imageSrc" [src]="imageSrc" alt="user-picture">
+                    <span *ngIf="!imageSrc">
+                        {{ imageLabel?.trim ().charAt (0) }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div *ngIf="viewMode" class="flex items-center ml-auto mb-1">
+                <button (click)="emitEditEvent()" mat-stroked-button>
+                    <mat-icon *ngIf="showIcon"
+                              [svgIcon]="'heroicons_solid:pencil-square'"
+                              class="icon-size-5"></mat-icon>
+                    <span class="ml-2">
+                        {{editLabel}}
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

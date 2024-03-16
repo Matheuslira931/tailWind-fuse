@@ -1,0 +1,13 @@
+<div (click)="toggle()"
+     [ngClass]="{'cursor-pointer': !blockChange}" class="flex sm:items-center">
+    <mat-icon [svgIcon]="icon"></mat-icon>
+    <div *ngIf="readMode; else showInput" class="ml-6 leading-6">
+        <ng-content></ng-content>
+    </div>
+</div>
+
+<ng-template #showInput>
+    <mat-form-field class="ml-6 leading-6 w-full">
+        <input (click)="onClickInput($event)" [formControl]="formControl" matInput>
+    </mat-form-field>
+</ng-template>

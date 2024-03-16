@@ -1,0 +1,36 @@
+.paginator {
+    position: absolute;
+    bottom: 0;
+}
+
+.avoid-text-break {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.inventory-grid {
+    grid-template-columns: 7% 10% 28% 15% 15% 15% 10% !important;
+}
+
+@media (max-width: 1400px) {
+    .inventory-grid {
+        grid-template-columns: 5% 30% 20% 25% 25% !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .inventory-grid {
+        grid-template-columns: 26% auto !important;
+    }
+
+    .optional-columns {
+        display: none !important;
+    }
+}
+
+@media (max-width: 750px) {
+    .optional-columns {
+        display: none !important;
+    }
+}

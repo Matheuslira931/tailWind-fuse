@@ -1,0 +1,63 @@
+<div class="flex flex-col w-full h-full">
+    <!-- Header -->
+    <app-details-header (onClose)="onClickCancel()"
+                        [showIcon]="false"
+                        [showImage]="false"
+                        [viewMode]="false"></app-details-header>
+
+    <div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0">
+        <div class="w-full max-w-3xl">
+            <div class="flex flex-col mt-4 space-y-8">
+                <div class="text-2xl font-bold truncate border-b w-full">
+                    Edição de Histórico - Petição
+                </div>
+
+                <form [formGroup]="form">
+                    <div class="mt-1 mr-2">
+                        <mat-form-field appearance="fill" class="w-full">
+                            <mat-label>Petição</mat-label>
+                            <input [matAutocomplete]="magazines"
+                                   aria-label="petition"
+                                   formControlName="petition"
+                                   matInput
+                                   required
+                                   type="text">
+                            <mat-autocomplete #magazines="matAutocomplete" [displayWith]="getMovementName">
+                                <mat-option *ngFor="let movement of movementList" [value]="movement">
+                                    {{ movement.nome }}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="mt-3 mr-2">
+                        <mat-form-field class="w-full">
+                            <mat-label>Data Protocolo</mat-label>
+                            <input [matDatepicker]="picker" formControlName="protocolDate" matInput>
+                            <mat-hint>DD/MM/YYYY</mat-hint>
+                            <mat-datepicker-toggle [for]="picker" matIconSuffix></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="mt-3 mr-2">
+                        <mat-form-field
+                            class="w-full">
+                            <mat-label>Nº Protocolo</mat-label>
+                            <input
+                                [spellcheck]="false"
+                                formControlName="protocolNumber"
+                                matInput>
+                        </mat-form-field>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <app-actions-form (cancel)="onClickCancel()"
+                      (delete)="onClickDelete()"
+                      (save)="onclickSave()"
+                      [saveDisabled]="form.invalid"
+                      [showRemoveButton]="true"></app-actions-form>
+</div>

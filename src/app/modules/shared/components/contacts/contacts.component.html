@@ -1,0 +1,145 @@
+<ng-container [formGroup]="form">
+    <!-- E-mail -->
+    <div class="mt-1">
+        <div class="space-y-4">
+            <ng-container
+                    *ngFor="let email of form?.get('emails')['controls']; let i = index; let first = first; let last = last;">
+                <div class="flex">
+                    <mat-form-field class="flex-auto">
+                        <mat-label>
+                            E-mail
+                            <span *ngIf="(i + 1) !== 1">
+                                {{i + 1}}
+                            </span>
+                        </mat-label>
+                        <mat-icon class="hidden sm:flex icon-size-5"
+                                  matPrefix
+                                  svgIcon="mat_outline:alternate_email"></mat-icon>
+                        <input [formControl]="email.get('value')"
+                               matInput
+                               type="email">
+                        <mat-error *ngIf="first && email.get('value').invalid">
+                            Campo obrigatório
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="flex-auto w-full max-w-24 sm:max-w-40 ml-2 sm:ml-4">
+                        <mat-label>Tipo</mat-label>
+                        <mat-icon [svgIcon]="'heroicons_outline:tag'"
+                                  class="hidden sm:flex icon-size-5"
+                                  matPrefix></mat-icon>
+                        <input [formControl]="email.get('type')"
+                               [matAutocomplete]="contactType"
+                               aria-label="Contato"
+                               matInput
+                               placeholder="Selecione o tipo de Contato"
+                               type="text">
+                        <mat-error *ngIf="first && email.get('type').invalid">
+                            Campo obrigatório
+                        </mat-error>
+                        <mat-autocomplete #contactType="matAutocomplete" [displayWith]="getContactName">
+                            <mat-option *ngFor="let contactType of emailTypes" [value]="contactType">
+                                {{ contactType.description }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+
+                    <!-- Remove E-mail -->
+                    <ng-container *ngIf="!(first && last)">
+                        <div
+                                class="flex items-center w-10 pl-2">
+                            <button
+                                    (click)="remove(i, EMAIL_FORM_PATH)"
+                                    class="w-8 h-8 min-h-8"
+                                    mat-icon-button
+                                    matTooltip="Remove">
+                                <mat-icon [svgIcon]="'heroicons_solid:trash'"
+                                          class="icon-size-5"></mat-icon>
+                            </button>
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-container>
+        </div>
+        <div
+                (click)="addNew(EMAIL_FORM_PATH)"
+                class="group inline-flex items-center mb-3 -ml-4 py-2 px-4 rounded cursor-pointer">
+            <mat-icon
+                    [svgIcon]="'heroicons_solid:plus-circle'"
+                    class="icon-size-5"></mat-icon>
+            <span class="ml-2 font-medium text-secondary group-hover:underline">Adicionar novo e-mail</span>
+        </div>
+    </div>
+
+
+    <!-- Telefone / Celular -->
+    <div class="mt-1">
+        <div class="space-y-4">
+            <ng-container
+                    *ngFor="let phoneNumber of form?.get('phoneNumbers')['controls']; let i = index; let first = first; let last = last;">
+                <div class="flex">
+                    <mat-form-field class="flex-auto">
+                        <mat-label>
+                            Telefone
+                            <span *ngIf="(i + 1) !== 1">
+                                {{i + 1}}
+                            </span>
+                        </mat-label>
+                        <mat-icon class="hidden sm:flex icon-size-5"
+                                  matPrefix
+                                  svgIcon="heroicons_outline:phone"></mat-icon>
+                        <input #phoneNumbers
+                               [formControl]="phoneNumber.get('value')"
+                               matInput
+                               type="text">
+                        <mat-error *ngIf="first && phoneNumber.get('value').invalid">
+                            Campo obrigatório
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="flex-auto w-full max-w-24 sm:max-w-40 ml-2 sm:ml-4">
+                        <mat-label>Tipo</mat-label>
+                        <mat-icon
+                                [svgIcon]="'heroicons_outline:tag'"
+                                class="hidden sm:flex icon-size-5"
+                                matPrefix></mat-icon>
+                        <input [formControl]="phoneNumber.get('type')"
+                               [matAutocomplete]="contactType"
+                               aria-label="Contato"
+                               matInput
+                               placeholder="Selecione o tipo de Contato"
+                               type="text">
+                        <mat-error *ngIf="first && phoneNumber.get('type').invalid">
+                            Campo obrigatório
+                        </mat-error>
+                        <mat-autocomplete #contactType="matAutocomplete" [displayWith]="getContactName">
+                            <mat-option *ngFor="let contactType of phoneTypes" [value]="contactType">
+                                {{ contactType.description }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+
+                    <!-- Remove Telefone -->
+                    <ng-container *ngIf="!(first && last)">
+                        <div class="flex items-center w-10 pl-2">
+                            <button
+                                    (click)="remove(i, PHONE_NUMBER_PATH)"
+                                    class="w-8 h-8 min-h-8"
+                                    mat-icon-button
+                                    matTooltip="Remove">
+                                <mat-icon [svgIcon]="'heroicons_solid:trash'"
+                                          class="icon-size-5"></mat-icon>
+                            </button>
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-container>
+        </div>
+        <div
+                (click)="addNew(PHONE_NUMBER_PATH)"
+                class="group inline-flex items-center mb-3 -ml-4 py-2 px-4 rounded cursor-pointer">
+            <mat-icon
+                    [svgIcon]="'heroicons_solid:plus-circle'"
+                    class="icon-size-5"></mat-icon>
+            <span class="ml-2 font-medium text-secondary group-hover:underline">Adicionar novo telefone</span>
+        </div>
+    </div>
+</ng-container>

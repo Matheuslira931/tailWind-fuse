@@ -1,0 +1,49 @@
+<table class="table-auto w-full">
+    <thead>
+    <tr>
+        <th class="text-start">Parcela</th>
+        <th class="text-start">Forma de Pagamento</th>
+        <th class="text-start">Valor</th>
+        <th class="text-start">Vencimento</th>
+    </tr>
+    </thead>
+    <tbody>
+    <ng-container *ngFor="let paymentInstallment of form?.get('paymentInstallments')['controls']; let i = index;">
+        <tr>
+            <td>
+                {{i + 1}}
+            </td>
+            <td>
+                <span *ngIf="!editMode">
+                    {{ paymentMethods.get(paymentInstallment.get('paymentForm').value).descricao }}
+                </span>
+                <mat-form-field *ngIf="editMode">
+                    <mat-select [formControl]="paymentInstallment.get('paymentForm')">
+                        <mat-option *ngFor="let paymentsType of paymentsTypes" [value]="paymentsType">
+                            {{paymentsType}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </td>
+            <td>
+                <span *ngIf="!editMode">
+                    {{paymentInstallment.get('value').value  | currency : 'BRL'}}
+                </span>
+                <mat-form-field *ngIf="editMode">
+                    <input [formControl]="paymentInstallment.get('value')" matInput>
+                </mat-form-field>
+            </td>
+            <td>
+                <span *ngIf="!editMode">
+                    {{paymentInstallment.get('dueDate').value   | date : 'dd/MM/yyyy'}}
+                </span>
+                <mat-form-field *ngIf="editMode">
+                    <input [formControl]="paymentInstallment.get('dueDate')" [matDatepicker]="picker" matInput>
+                    <mat-datepicker-toggle [for]="picker" matIconSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </td>
+        </tr>
+    </ng-container>
+    </tbody>
+</table>

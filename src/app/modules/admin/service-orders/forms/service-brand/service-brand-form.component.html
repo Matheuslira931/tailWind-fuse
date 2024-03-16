@@ -1,0 +1,95 @@
+<app-dialog-form title="Nova Marca">
+    <form class="">
+        <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Petição</mat-label>
+            <input [matAutocomplete]="petitions"
+                   aria-label="movementId"
+                   formControlName="movementId"
+                   matInput
+                   required
+                   type="text">
+            <mat-autocomplete #petitions="matAutocomplete" [displayWith]="getPetitionName">
+                <mat-option *ngFor="let petition of petitionList" [value]="petition">
+                    {{ petition.nome }}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+
+        <div class="grid grid-cols-2">
+            <div class="flex flex-col mr-2">
+                <div class="mt-1 mr-2">
+                    <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Apresentação</mat-label>
+                        <input [matAutocomplete]="magazines"
+                               aria-label="movementId"
+                               formControlName="movementId"
+                               matInput
+                               required
+                               type="text">
+                        <mat-autocomplete #magazines="matAutocomplete" [displayWith]="getPresentationName">
+                            <mat-option *ngFor="let movement of petitionList" [value]="movement">
+                                {{ movement.nome }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="flex flex-col">
+                <div class="mt-1">
+                    <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Classe</mat-label>
+                        <input aria-label="class"
+                               formControlName="class"
+                               matInput
+                               required
+                               type="text">
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Elemento Nominativo</mat-label>
+            <input aria-label="element"
+                   formControlName="element"
+                   matInput
+                   required
+                   type="text">
+        </mat-form-field>
+
+        <div class="grid grid-cols-2">
+            <div class="flex flex-col mr-2">
+                <div class="mt-1 mr-2">
+                    <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>RPI de Indeferimento</mat-label>
+                        <input [matAutocomplete]="magazines"
+                               aria-label="movementId"
+                               formControlName="movementId"
+                               matInput
+                               required
+                               type="text">
+                        <mat-autocomplete #magazines="matAutocomplete" [displayWith]="getRPIName">
+                            <mat-option *ngFor="let movement of petitionList" [value]="movement">
+                                {{ movement.nome }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="flex flex-col">
+                <div class="mt-1">
+                    <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Prazo para Recurso</mat-label>
+                        <input aria-label="class"
+                               formControlName="class"
+                               matInput
+                               required
+                               type="text">
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </form>
+</app-dialog-form>

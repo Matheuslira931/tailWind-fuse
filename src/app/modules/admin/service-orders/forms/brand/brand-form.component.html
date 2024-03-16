@@ -1,0 +1,40 @@
+<app-dialog-form title="Nova Marca">
+    <form class="">
+        <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Elemento Nominativo</mat-label>
+            <input aria-label="movementId"
+                   formControlName="movementId"
+                   matInput
+                   required
+                   type="text">
+        </mat-form-field>
+
+        <div class="grid grid-cols-2">
+            <div class="flex flex-col mr-2">
+                <div class="mt-1 mr-2">
+                    <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Apresentação</mat-label>
+                        <input aria-label="magazineNumber"
+                               formControlName="magazineNumber"
+                               matInput
+                               required
+                               type="text">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="flex flex-col mr-2">
+                <div class="mt-1 mr-2">
+                    <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Classificação</mat-label>
+                        <input aria-label="magazineNumber"
+                               formControlName="magazineNumber"
+                               matInput
+                               required
+                               type="text">
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </form>
+</app-dialog-form>

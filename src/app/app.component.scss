@@ -1,0 +1,44 @@
+app-root {
+    display: flex;
+    flex-grow: 1;
+}
+
+:host {
+    display: flex;
+    flex: 1 1 auto;
+    width: 100%;
+    height: 100%;
+}
+
+.spinner-wrapper {
+    top: 0;
+    width: 100%;
+    z-index: 9;
+    height: 100%;
+    opacity: 50%;
+    position: absolute;
+    background: lightgray;
+}
+
+.spinner {
+    top: 50%;
+    left: 50%;
+    width: 150px;
+    height: 150px;
+    position: absolute !important;
+    z-index: 99;
+}
+
+.no-padding-container {
+    padding: 0 !important;
+}
+
+#no-padding-dialog {
+    .mdc-dialog__surface {
+        padding: 0 !important;
+    }
+}
+
+.mat-mdc-dialog-surface {
+    padding: 0 !important;
+}

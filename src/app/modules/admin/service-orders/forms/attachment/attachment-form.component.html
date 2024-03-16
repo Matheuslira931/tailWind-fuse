@@ -1,0 +1,42 @@
+<app-dialog-form (cancel)="closeDialog()" title="Anexos • OS 230050">
+    <form>
+        <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Tipo de Anexo</mat-label>
+            <input [matAutocomplete]="attachmentsTypes"
+                   aria-label="attachmentType"
+                   formControlName="attachmentType"
+                   matInput
+                   required
+                   type="text">
+            <mat-autocomplete #attachmentsTypes="matAutocomplete" [displayWith]="getAttachmentType">
+                <mat-option *ngFor="let attachment of attachmentTypes" [value]="attachment">
+                    {{ attachment.nome }}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Nome do Arquivo</mat-label>
+            <input aria-label="fileName"
+                   formControlName="fileName"
+                   matInput
+                   required
+                   type="text">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Descrição (Opcional)</mat-label>
+            <input [matAutocomplete]="attachments"
+                   aria-label="description"
+                   formControlName="description"
+                   matInput
+                   required
+                   type="text">
+            <mat-autocomplete #attachments="matAutocomplete" [displayWith]="getAttachmentType">
+                <mat-option *ngFor="let attachment of attachmentTypes" [value]="attachment">
+                    {{ attachment.nome }}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </form>
+</app-dialog-form>

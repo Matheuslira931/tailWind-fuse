@@ -1,0 +1,414 @@
+<div class="flex flex-col flex-auto min-w-0 h-full">
+
+    <mat-drawer-container
+        (backdropClick)="onBackdropClicked()"
+        class="flex-auto h-full bg-card dark:bg-transparent">
+
+        <!-- Drawer -->
+        <mat-drawer
+            #matDrawer
+            [mode]="'side'"
+            [opened]="openedSideForm"
+            [position]="'end'"
+            class="w-full sm:w-128 dark:bg-gray-900">
+            <router-outlet></router-outlet>
+        </mat-drawer>
+
+        <mat-drawer-content class="flex flex-col">
+            <!-- Header -->
+            <div class="flex flex-col mx-auto bg-card w-full">
+                <div class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-4">
+                    <!-- Avatar and name -->
+                    <ng-container *ngIf="viewContent | async">
+                        <div class="w-full flex items-center">
+                            <div
+                                class="flex-0 w-20 h-20 flex items-center justify-center rounded font-bold leading-none"
+                                style="width: 130px">
+                                <img [src]="URL_PREFIX + record?.brandingProcess[0]?.urlLogo"
+                                     class="rounded-image w-full h-full object-cover">
+                            </div>
+                            <div class="flex flex-col min-w-0 ml-4">
+                                <div
+                                    class="text-2xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate">
+                                    {{record?.brandingProcess[0]?.elementonominativo | titlecase}}
+                                </div>
+                                <div class="flex items-center">
+                                    <mat-icon
+                                        [svgIcon]="'heroicons_solid:bell'"
+                                        class="icon-size-5"></mat-icon>
+                                    <div class="ml-1.5 leading-6 truncate text-secondary">
+                                        {{record?.situacaoRegistro?.nome | titlecase }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <!-- Actions -->
+                    <div class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3">
+                        <button (click)="redirectToList()"
+                                [color]="'primary'"
+                                mat-raised-button>
+                            <mat-icon svgIcon="feather:arrow-left"></mat-icon>
+                            <span class="ml-2">Voltar</span>
+                        </button>
+                        <button [matMenuTriggerFor]="adjustmentOptions" mat-raised-button>
+                            <mat-icon svgIcon="feather:settings"></mat-icon>
+                        </button>
+                        <mat-menu #adjustmentOptions="matMenu" class="menu">
+                            <ng-container *ngFor="let option of optionsByTab.get(currentTabIndex)">
+                                <button (click)="option.onClick()" class="flex my-3 px-4">
+                                    {{option.label}}
+                                </button>
+                            </ng-container>
+                        </mat-menu>
+
+                        <button mat-raised-button>
+                            <mat-icon svgIcon="feather:printer"></mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main -->
+            <div class="flex-auto border-t -mt-px pt-4 sm:pt-6 h-full" style="background-color: #F1F5F9">
+                <div class="w-full max-w-screen-xl mx-auto h-full">
+
+                    <mat-sidenav #sidenav [(opened)]="openedSideNav" mode="side" position="end">
+                        <file-manager-details (closed)="onCloseFileDetails()" *ngIf="selectedItem"
+                                              [item]="selectedItem">
+                        </file-manager-details>
+                    </mat-sidenav>
+
+                    <!-- Tabs -->
+                    <mat-tab-group
+                        #tabGroup
+                        (selectedTabChange)="tabChanged($event)"
+                        [animationDuration]="'0'"
+                        class="sm:px-2 h-full"
+                        mat-stretch-tabs="false">
+
+                        <!-- Home -->
+                        <mat-tab label="Dados Gerais">
+                            <ng-template matTabContent>
+                                <div [ngClass]="{'sm:grid-cols-6': !openedSideForm}"
+                                     class="grid grid-cols-1 gap-6 w-full min-w-0">
+                                    <div
+                                        class="sm:col-span-3 lg:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl">
+                                        <div class="relative flex flex-col flex-auto">
+                                            <div class="w-full">
+                                                <div class="flex flex-col space-y-8">
+
+                                                    <div *ngIf="record?.brandingProcess[0]?.elementonominativo"
+                                                         class="flex sm:items-center">
+                                                        <mat-icon svgIcon="heroicons_outline:play"></mat-icon>
+                                                        <div class="ml-6 leading-6">
+                                                            {{record?.brandingProcess[0]?.elementonominativo | titlecase}}
+                                                        </div>
+                                                    </div>
+
+                                                    <div *ngIf="record?.numeroprocesso"
+                                                         class="flex sm:items-center">
+                                                        <mat-icon svgIcon="heroicons_outline:check-badge"></mat-icon>
+                                                        <div class="ml-6 leading-6">
+                                                            {{record?.numeroprocesso}}
+                                                        </div>
+                                                    </div>
+
+                                                    <div *ngIf="record?.brandingProcess[0]?.apresentacao"
+                                                         class="flex sm:items-center">
+                                                        <mat-icon svgIcon="heroicons_outline:star"></mat-icon>
+                                                        <div class="ml-6 leading-6">
+                                                            {{record?.brandingProcess[0]?.apresentacao}}
+                                                        </div>
+                                                    </div>
+
+                                                    <div *ngIf="record?.situacaoRegistro?.nome"
+                                                         class="flex sm:items-center">
+                                                        <mat-icon svgIcon="heroicons_outline:bell"></mat-icon>
+                                                        <div class="ml-6 leading-6">
+                                                            {{record?.situacaoRegistro?.nome | titlecase}}
+                                                        </div>
+                                                    </div>
+
+                                                    <div *ngIf="record?.processHolder[0]?.customer?.nome"
+                                                         class="flex sm:items-center">
+                                                        <mat-icon svgIcon="heroicons_outline:user"></mat-icon>
+                                                        <div class="ml-6 leading-6">
+                                                            {{record?.processHolder[0]?.customer?.nome | titlecase}}
+                                                        </div>
+                                                    </div>
+
+                                                    <div *ngIf="record?.processHolder[0]?.company?.razaosocial"
+                                                         class="flex sm:items-center">
+                                                        <mat-icon
+                                                            svgIcon="heroicons_outline:building-office"></mat-icon>
+                                                        <div class="ml-6 leading-6">
+                                                            {{record?.processHolder[0]?.company?.razaosocial | titlecase}}
+                                                            • {{record?.processHolder[0]?.company?.cnpj | titlecase}}
+                                                        </div>
+                                                    </div>
+
+                                                    <div *ngIf="record?.prioridade"
+                                                         class="flex sm:items-center">
+                                                        <mat-icon svgIcon="heroicons_outline:calendar"></mat-icon>
+                                                        <div class="ml-6 leading-6">
+                                                            {{record?.prioridade  | date : 'dd/MM/yyyy'}} • Prioridade
+                                                        </div>
+                                                    </div>
+
+                                                    <div *ngIf="record?.details?.validity"
+                                                         class="flex sm:items-center">
+                                                        <mat-icon svgIcon="heroicons_outline:clock"></mat-icon>
+                                                        <div class="ml-6 leading-6">
+                                                            {{record?.details?.validity  | date : 'dd/MM/yyyy'}} •
+                                                            Vigência
+                                                        </div>
+                                                    </div>
+
+                                                    <div *ngIf="record?.brandingProcess[0]?.class?.numero"
+                                                         class="flex sm:items-center">
+                                                        <mat-icon svgIcon="heroicons_outline:bookmark"></mat-icon>
+                                                        <div class="ml-6 leading-6">
+                                                            NCL {{record?.brandingProcess[0]?.class?.numero}}
+                                                        </div>
+                                                    </div>
+
+                                                    <div *ngIf="hasSpecifications()"
+                                                         class="flex sm:items-center">
+                                                        <mat-icon
+                                                            svgIcon="heroicons_outline:bars-3-bottom-left"></mat-icon>
+                                                        <div class="ml-6 leading-6 cursor-pointer"
+                                                             (click)="showAllSpecifications()"
+                                                             [matTooltipDisabled]="!showBriefSpecifications"
+                                                             matTooltip="Ver tudo">
+                                                            <span *ngIf="showBriefSpecifications">
+                                                                {{buildSpecifications () | truncate: 100 }}
+                                                            </span>
+                                                            <span *ngIf="!showBriefSpecifications">
+                                                                {{buildSpecifications () }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="processDetails && !openedSideForm"
+                                         class="sm:col-span-3 lg:col-span-2 grid grid-cols-1 gap-y-6 bg-card p-6 shadow rounded-2xl">
+                                        <div class="flex flex-col">
+                                            <div class="flex">
+                                                <div
+                                                    class="flex items-center justify-center w-14 h-14 rounded bg-red-100 text-red-800 dark:bg-red-600 dark:text-red-50">
+                                                    <mat-icon [svgIcon]="'heroicons_outline:arrow-trending-up'"
+                                                              class="text-current"></mat-icon>
+                                                </div>
+                                                <div class="flex-auto ml-4 leading-none flex flex-col justify-between">
+                                                    <div class="text-sm font-medium text-secondary">Fluxo Processual
+                                                    </div>
+                                                    <div class="inline-block">
+                                                        <div
+                                                            class="inline-flex text-sm font-medium text-secondary h-6 min-h-6 px-2 justify-center rounded-full bg-hover items-center">
+                                                            {{processDetails.forecastName}}
+                                                        </div>
+                                                    </div>
+                                                    <mat-progress-bar
+                                                        [color]="'warn'"
+                                                        [mode]="'determinate'"
+                                                        [value]="processDetails.progressPercentage"
+                                                        class="mt-3 rounded-full"></mat-progress-bar>
+                                                </div>
+                                                <div
+                                                    class="flex flex-col justify-between items-end">
+                                                    <p>
+                                                        {{processDetails.progressPercentage}} %
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="-my-3 divide-y">
+                                                <div class="-my-3 divide-y">
+                                                    <div class="flex justify-between py-3 mb-2">
+                                                        <div class="flex items-center">
+                                                            <div
+                                                                [style.backgroundColor]="'#F6AD55'"
+                                                                class="flex-0 w-2 h-2 rounded-full"></div>
+                                                            <div class="ml-3 truncate">Publicação</div>
+                                                        </div>
+                                                        <div *ngIf="processDetails.publicationForecast"
+                                                             class="font-medium text-right">
+                                                            {{processDetails.publicationForecast | date : 'dd/MM/yyyy'}}
+                                                            • Previsão
+                                                        </div>
+                                                        <div *ngIf="processDetails.publicationDispatch"
+                                                             class="font-medium text-right">
+                                                            {{processDetails.publicationDispatch | date : 'dd/MM/yyyy'}}
+                                                            • Despacho
+                                                        </div>
+                                                    </div>
+                                                    <div class="-my-3">
+                                                        <div class="flex justify-between py-3">
+                                                            <div class="flex items-center">
+                                                                <div
+                                                                    [style.backgroundColor]="'#DD6B20'"
+                                                                    class="flex-0 w-2 h-2 rounded-full"></div>
+                                                                <div class="ml-3 truncate">Deferimento</div>
+                                                            </div>
+                                                            <div *ngIf="processDetails.defermentForecast"
+                                                                 class="font-medium text-right">
+                                                                {{processDetails.defermentForecast | date : 'dd/MM/yyyy'}}
+                                                                • Previsão
+                                                            </div>
+                                                            <div *ngIf="processDetails.defermentDispatch"
+                                                                 class="font-medium text-right">
+                                                                {{processDetails.defermentDispatch | date : 'dd/MM/yyyy'}}
+                                                                • Despacho
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="flex-col">
+                                            <div class="flex">
+                                                <div
+                                                    class="flex items-center justify-center w-14 h-14 rounded bg-teal-100 text-teal-800 dark:bg-teal-600 dark:text-teal-50">
+                                                    <mat-icon svgIcon="heroicons_outline:shield-check"></mat-icon>
+                                                </div>
+                                                <div class="flex-auto ml-4 leading-none flex flex-col justify-between">
+                                                    <div class="text-sm font-medium text-secondary">Vigência</div>
+                                                    <div *ngIf="processDetails.validity" class="inline-block">
+                                                        <div
+                                                            class="inline-flex text-sm font-medium text-secondary h-6 min-h-6 px-2 justify-center rounded-full bg-hover items-center">
+                                                            {{processDetails.validity | date : 'dd/MM/yyyy'}}
+                                                        </div>
+                                                    </div>
+                                                    <mat-progress-bar
+                                                        [color]="'primary'"
+                                                        [mode]="'determinate'"
+                                                        [value]="processDetails.validityPercentage"
+                                                        class="mt-3 rounded-full validity-progress"></mat-progress-bar>
+                                                </div>
+                                                <div [ngClass]="{'justify-between': processDetails.extensionName,
+                                                        'justify-end': !(processDetails?.extensionName)
+                                            }"
+                                                     class="flex flex-col justify-between items-end last-col">
+                                                    <p>
+                                                        {{processDetails.validityPercentage}} %
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="flex-col">
+                                            <div class="flex">
+                                                <div
+                                                    class="flex items-center justify-center w-14 h-14 rounded bg-indigo-100 text-indigo-800 dark:bg-indigo-600 dark:text-indigo-50">
+                                                    <mat-icon
+                                                        class="text-current"
+                                                        svgIcon="heroicons_outline:arrow-path"></mat-icon>
+                                                </div>
+                                                <div class="flex-auto ml-4 leading-none flex flex-col justify-between">
+                                                    <div class="text-sm font-medium text-secondary">Prorrogação</div>
+                                                    <div *ngIf="processDetails.extensionName" class="inline-block">
+                                                        <div
+                                                            class="inline-flex text-sm font-medium text-secondary h-6 min-h-6 px-2 justify-center rounded-full bg-hover items-center">
+                                                            {{processDetails.extensionName | titlecase}}
+                                                        </div>
+                                                    </div>
+                                                    <mat-progress-bar
+                                                        [color]="'primary'"
+                                                        [mode]="'determinate'"
+                                                        [value]="processDetails.extensionPercentage"
+                                                        class="mt-3 rounded-full"></mat-progress-bar>
+                                                </div>
+                                                <div [ngClass]="{'justify-between': processDetails.extensionName,
+                                                        'justify-end': !(processDetails?.extensionName)
+                                            }"
+                                                     class="flex flex-col justify-between items-end last-col">
+                                                    <p>
+                                                        {{processDetails.extensionPercentage}} %
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="-my-3 divide-y">
+                                            <div class="grid grid-cols-3 py-3 mb-2">
+                                                <div class="flex items-center">
+                                                    <div
+                                                        [style.backgroundColor]="'#3182CE'"
+                                                        class="flex-0 w-2 h-2 rounded-full"></div>
+                                                    <div class="ml-3 truncate">Ordinário</div>
+                                                </div>
+                                                <div class="font-medium text-right">
+                                                    {{ processDetails.ordinaryTermStartDate | date : 'dd/MM/yyyy'}}
+                                                </div>
+                                                <div class="text-right text-secondary">
+                                                    {{ processDetails.ordinaryTermEndDate | date : 'dd/MM/yyyy'}}
+                                                </div>
+                                            </div>
+                                            <div *ngIf="processDetails.extraordinaryTermStartDate ||
+                                                processDetails.extraordinaryTermEndDate" class="-my-3">
+                                                <div class="grid grid-cols-3 py-3">
+                                                    <div class="flex items-center">
+                                                        <div
+                                                            [style.backgroundColor]="'#63B3ED'"
+                                                            class="flex-0 w-2 h-2 rounded-full"></div>
+                                                        <div class="ml-3 truncate">Extra</div>
+                                                    </div>
+                                                    <div class="font-medium text-right">
+                                                        {{processDetails.extraordinaryTermStartDate | date : 'dd/MM/yyyy'}}
+                                                    </div>
+                                                    <div class="text-right text-secondary">
+                                                        {{processDetails.extraordinaryTermEndDate | date : 'dd/MM/yyyy'}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </mat-tab>
+
+                        <!-- Budget -->
+                        <mat-tab class="h-full ps-5" label="Histórico">
+                            <ng-template matTabContent>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 w-full min-w-0">
+                                    <div class="px-5">
+                                        <ol>
+                                            <ng-container *ngFor="let history of processHistory; let i = index">
+                                                <history-card [history]="history"
+                                                              [showConnectionLine]="hasNextHistory(i)"
+                                                              (editingHistory)="onEditHistory()"></history-card>
+                                            </ng-container>
+                                        </ol>
+                                    </div>
+
+                                </div>
+                            </ng-template>
+                        </mat-tab>
+
+                        <!-- Team -->
+                        <mat-tab>
+                            <ng-template mat-tab-label>
+                        <span class="inline-flex items-center space-x-2">
+                            <span class="">Anexos</span>
+                            <span class="px-2 py-1 text-sm rounded-full bg-primary-100 text-on-primary-100">9</span>
+                        </span>
+                            </ng-template>
+                            <ng-template matTabContent>
+                                <app-attachment-list (selected)="onFileSelect($event)"
+                                                     [showFolders]="false"></app-attachment-list>
+                            </ng-template>
+                        </mat-tab>
+
+                    </mat-tab-group>
+                </div>
+            </div>
+
+        </mat-drawer-content>
+
+    </mat-drawer-container>
+
+</div>

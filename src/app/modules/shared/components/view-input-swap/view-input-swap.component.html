@@ -1,0 +1,11 @@
+<div class="flex sm:items-center">
+    <mat-icon [svgIcon]="icon" class="mr-3"></mat-icon>
+    <div (click)="toggleMode()" *ngIf="viewMode" class="leading-6">
+        Teste
+    </div>
+    <ng-container *ngIf="!viewMode">
+        <ng-content></ng-content>
+    </ng-container>
+    <mat-icon *ngIf="!viewMode" class="ml-3" svgIcon="heroicons_outline:check"></mat-icon>
+    <mat-icon *ngIf="!viewMode" svgIcon="heroicons_outline:x-circle"></mat-icon>
+</div>

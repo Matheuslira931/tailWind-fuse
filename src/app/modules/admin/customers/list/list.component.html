@@ -1,0 +1,147 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+    <mat-drawer-container (backdropClick)="closeDrawer()" class="flex-auto h-full bg-card dark:bg-transparent">
+
+        <!-- Drawer -->
+        <mat-drawer
+            #matDrawer
+            [disableClose]="true"
+            [mode]="'over'"
+            [opened]="false"
+            [position]="'end'"
+            class="w-full md:w-160 dark:bg-gray-900">
+            <router-outlet></router-outlet>
+        </mat-drawer>
+
+        <mat-drawer-content class="flex flex-col">
+
+            <!-- Main -->
+            <div class="flex-auto">
+                <!-- Header -->
+                <app-list-header (search)="search($event)"
+                                 [isLoading]="isLoading"
+                                 [showNewButton]="false"
+                                 [title]="listTitle">
+                    <div class="flex">
+                        <div>
+                            <button [color]="'primary'"
+                                    [matMenuTriggerFor]="moreMenu"
+                                    class="ml-4"
+                                    mat-flat-button>
+                                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                                <span class="ml-2 mr-1 new-button-label">Novo</span>
+                            </button>
+
+                            <mat-menu #moreMenu="matMenu">
+                                <button (click)="addNewCustomer(customerType.PF)" mat-menu-item>
+                                    <span>Pessoa Física</span>
+                                </button>
+                                <button (click)="addNewCustomer(customerType.PJ)" mat-menu-item>
+                                    <span>Pessoa Jurídica</span>
+                                </button>
+                            </mat-menu>
+                        </div>
+                        <div>
+                            <button [matMenuTriggerFor]="filterOptions" class="ml-2" mat-raised-button>
+                                <mat-icon svgIcon="heroicons_outline:adjustments-vertical"></mat-icon>
+                            </button>
+                            <mat-menu #filterOptions="matMenu">
+                                <button (click)="filterBy(customerTypeFilter.PF)" mat-menu-item>
+                                    <span>Exibir Pessoas Físicas</span>
+                                </button>
+                                <button (click)="filterBy(customerTypeFilter.PJ)" mat-menu-item>
+                                    <span>Exibir Pessoas Jurídicas</span>
+                                </button>
+                                <button (click)="filterBy(customerTypeFilter.ALL)" mat-menu-item>
+                                    <span>Exibir Todos</span>
+                                </button>
+                            </mat-menu>
+                        </div>
+                    </div>
+                </app-list-header>
+
+                <div class="flex flex-auto md:overflow-hidden">
+                    <ng-container *ngIf="records as page">
+                        <ng-container *ngIf="page.records.length > 0; else noRecords">
+                            <table class="grid w-full">
+                                <!-- Header -->
+                                <tr
+                                    (matSortChange)="sortData($event)"
+                                    class="inventory-grid grid grid-cols-6 py-4 px-6 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                                    matSort
+                                    matSortDisableClear>
+                                    <th>Tipo</th>
+                                    <th [mat-sort-header]="'descricao'">Nome</th>
+                                    <th class="hidden sm:block">
+                                        CPF/ CNPJ
+                                    </th>
+                                    <th class="hidden sm:block">
+                                        Email
+                                    </th>
+                                    <th class="hidden lg:block optional-columns">
+                                        Telefone / Celular
+                                    </th>
+                                    <th [mat-sort-header]="'representante'" class="hidden lg:block">
+                                        Representante Legal
+                                    </th>
+                                </tr>
+                                <!-- Rows -->
+                                <ng-container *ngFor="let item of page.records; trackBy: trackByFn">
+                                    <div [queryParams]="{customerType: item.tipoDesc}"
+                                         [routerLink]="['./', item.personId]"
+                                         class="grid inventory-grid items-center py-3 px-6 border-b cursor-pointer">
+                                        <td class="truncate">
+                                            {{ item?.tipoDesc | uppercase }}
+                                        </td>
+                                        <!-- Nome -->
+                                        <td [matTooltip]="item?.descricao" class="truncate handle-text-overflow">
+                                            {{ item?.descricao }}
+                                        </td>
+                                        <!-- CPF / CNPJ -->
+                                        <td class="hidden sm:block">
+                                            {{ (item?.documento | cnpjorcpf)}}
+                                        </td>
+                                        <!-- E-mail-->
+                                        <td [matTooltip]="item?.email" class="hidden sm:block handle-text-overflow">
+                                            {{ item?.email | lowercase }}
+                                        </td>
+                                        <!-- Telefone-->
+                                        <td class="hidden lg:block optional-columns">
+                                            {{ item?.telefone | telefone }}
+                                        </td>
+                                        <td [matTooltip]="item?.representante"
+                                            class="hidden lg:block handle-text-overflow">
+                                            {{ item?.representante | titlecase }}
+                                        </td>
+                                    </div>
+                                </ng-container>
+                            </table>
+                        </ng-container>
+                    </ng-container>
+                </div>
+
+                <mat-paginator
+                    #paginator
+                    (page)="handlePageEvent($event)"
+                    [length]="length"
+                    [ngClass]="{ 'pointer-events-none': isLoading }"
+                    [pageIndex]="pageIndex"
+                    [pageSizeOptions]="pageSizeOptions"
+                    [pageSize]="pageSize"
+                    [showFirstLastButtons]="true"
+                    aria-label="Selecione a página"
+                >
+                </mat-paginator>
+
+            </div>
+
+        </mat-drawer-content>
+
+    </mat-drawer-container>
+
+</div>
+
+<ng-template #noRecords>
+    <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">
+        Não tem registros!
+    </div>
+</ng-template>

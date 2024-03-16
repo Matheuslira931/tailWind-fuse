@@ -1,0 +1,184 @@
+<form [formGroup]="form" class="px-6 sm:px-12">
+    <!-- Razão Social -->
+    <div class="mt-1">
+        <mat-form-field
+                class="w-full">
+            <mat-label>Razão Social</mat-label>
+            <mat-icon
+                    [svgIcon]="'heroicons_solid:user-circle'"
+                    class="hidden sm:flex icon-size-5"
+                    matPrefix></mat-icon>
+            <input
+                    [formControlName]="'razaoSocial'"
+                    [placeholder]="'Razão Social'"
+                    [spellcheck]="false"
+                    matInput>
+            <mat-error *ngIf="form.get('razaoSocial').invalid">
+                Campo obrigatório
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    <!-- Fantasia -->
+    <div class="mt-1">
+        <mat-form-field class="w-full">
+            <mat-label>Fantasia</mat-label>
+            <mat-icon svgIcon="heroicons_solid:building-office"
+                      class="hidden sm:flex icon-size-5"
+                      matPrefix></mat-icon>
+            <input [formControlName]="'fantasia'"
+                   [placeholder]="'Fantasia'"
+                   [spellcheck]="false"
+                   matInput>
+        </mat-form-field>
+    </div>
+
+    <!-- CNPJ -->
+    <div class="mt-1">
+        <mat-form-field
+                class="w-full">
+            <mat-label>CNPJ</mat-label>
+            <mat-icon
+                    class="hidden sm:flex icon-size-5"
+                    matPrefix
+                    svgIcon="heroicons_outline:building-office"></mat-icon>
+            <input #cnpjInput
+                   [formControlName]="'cnpj'"
+                   [placeholder]="'CNPJ'"
+                   [spellcheck]="false"
+                   matInput>
+            <mat-error *ngIf="form.get('cnpj').invalid">
+                Campo obrigatório
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+
+    <!-- Porte INPI -->
+    <div class="mt-1">
+        <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Porte INPI</mat-label>
+            <mat-icon
+                    [svgIcon]="'heroicons_outline:tag'"
+                    class="hidden sm:flex icon-size-5"
+                    matPrefix></mat-icon>
+            <input [formControlName]="'porteINPI'"
+                   [matAutocomplete]="porteINPI"
+                   aria-label="Porte"
+                   matInput
+                   placeholder="Selecione um porte"
+                   type="text">
+            <mat-error *ngIf="form.get('porteINPI').invalid">
+                Campo obrigatório
+            </mat-error>
+            <mat-autocomplete #porteINPI="matAutocomplete" [displayWith]="getCompanySize">
+                <mat-option *ngFor="let porte of companySizes" [value]="porte">
+                    {{ porte.name }}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </div>
+
+    <!-- Inscrição Estadual -->
+    <div class="mt-1">
+        <mat-form-field
+                class="w-full">
+            <mat-label>Inscrição Estadual</mat-label>
+            <mat-icon
+                    [svgIcon]="'heroicons_solid:user-circle'"
+                    class="hidden sm:flex icon-size-5"
+                    matPrefix></mat-icon>
+            <input #inscricaoEstadual
+                    [formControlName]="'inscricaoEstadual'"
+                    [placeholder]="'Inscrição Estadual'"
+                    [spellcheck]="false"
+                    matInput>
+        </mat-form-field>
+    </div>
+
+    <app-contacts [form]="form"></app-contacts>
+
+    <app-address-info [cityId]="customer?.person?.cidadeid" [form]="form"></app-address-info>
+
+    <!-- Representante -->
+    <div class="mt-1">
+        <div class="space-y-4">
+            <ng-container
+                    *ngFor="let person of form.get('representativePeople')['controls']; let i = index; let first = first; let last = last;">
+                <div class="flex">
+                    <mat-form-field class="flex-auto">
+                        <mat-label *ngIf="first">Representante</mat-label>
+                        <mat-icon class="hidden sm:flex icon-size-5"
+                                  matPrefix
+                                  svgIcon="heroicons_mini:user"></mat-icon>
+                        <input [formControl]="person.get('person')"
+                               [matAutocomplete]="customer"
+                               aria-label="Representante"
+                               matInput
+                               placeholder="Selecione um representante"
+                               type="text">
+                        <mat-error *ngIf="first && person.get('person').invalid">
+                            Campo obrigatório
+                        </mat-error>
+                        <mat-autocomplete #customer="matAutocomplete" [displayWith]="getCustomerName">
+                            <mat-option *ngFor="let customer of customers" [value]="customer">
+                                {{ customer.descricao | titlecase}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <mat-form-field class="flex-auto w-full max-w-24 sm:max-w-40 ml-2 sm:ml-4">
+                        <mat-label *ngIf="first">Cargo</mat-label>
+                        <mat-icon
+                                [svgIcon]="'heroicons_outline:user'"
+                                class="hidden sm:flex icon-size-5"
+                                matPrefix></mat-icon>
+                        <input [formControl]="person.get('position')"
+                               [matAutocomplete]="position"
+                               aria-label="Cargo"
+                               matInput
+                               placeholder="Selecione um cargo"
+                               type="text">
+                        <mat-error *ngIf="first && person.get('position').invalid">
+                            Campo obrigatório
+                        </mat-error>
+                        <mat-autocomplete #position="matAutocomplete" [displayWith]="getPositionName">
+                            <mat-option *ngFor="let position of positions" [value]="position">
+                                {{ position.nome | titlecase}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <!-- Remove Employee -->
+                    <ng-container *ngIf="!(first && last)">
+                        <div
+                                [ngClass]="{'mb-4': !first}"
+                                class="flex items-center w-10 pl-2">
+                            <button
+                                    (click)="removeEmployee(i)"
+                                    class="w-8 h-8 min-h-8"
+                                    mat-icon-button
+                                    matTooltip="Remove">
+                                <mat-icon
+                                        [svgIcon]="'heroicons_solid:trash'"
+                                        class="icon-size-5"></mat-icon>
+                            </button>
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-container>
+        </div>
+        <div
+                (click)="addNewEmployee()"
+                class="group inline-flex items-center mb-3 -ml-4 py-2 px-4 rounded cursor-pointer">
+            <mat-icon
+                    [svgIcon]="'heroicons_solid:plus-circle'"
+                    class="icon-size-5"></mat-icon>
+            <span class="ml-2 font-medium text-secondary group-hover:underline">Adicionar novo membro</span>
+        </div>
+    </div>
+</form>
+
+<app-actions-form (delete)="delete.emit()"
+                  (save)="save.emit()"
+                  (cancel)="cancel.emit()"
+                  [record]="customer"
+                  [saveDisabled]="form.invalid"></app-actions-form>

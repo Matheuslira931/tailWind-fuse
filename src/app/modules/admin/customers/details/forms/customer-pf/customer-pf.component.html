@@ -1,0 +1,203 @@
+<form [formGroup]="form" class="px-6 sm:px-12">
+
+    <!-- Name -->
+    <div class="mt-1">
+        <mat-form-field
+                class="w-full">
+            <mat-label>Nome</mat-label>
+            <mat-icon
+                    [svgIcon]="'heroicons_solid:user-circle'"
+                    class="hidden sm:flex icon-size-5"
+                    matPrefix></mat-icon>
+            <input
+                    [formControlName]="'nome'"
+                    [placeholder]="'Nome'"
+                    [spellcheck]="false"
+                    matInput>
+            <mat-error *ngIf="form.get('nome').invalid">
+                Campo obrigatório
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    <!-- Documentos Pessoais -->
+    <div class="mt-1">
+        <div class="space-y-4">
+            <ng-container
+                    *ngFor="let personalDocument of form?.get('personalDocumentsForm')['controls']; let i = index; let first = first; let last = last;">
+                <div class="relative flex">
+                    <mat-form-field class="flex-auto">
+                        <mat-label *ngIf="first">Documentos Pessoais</mat-label>
+                        <input #cpfInput
+                               [formControl]="personalDocument.get('value')"
+                               [required]="first"
+                               matInput
+                               placeholder="Número"
+                               type="text">
+                        <mat-error *ngIf="first && personalDocument.get('value').invalid">
+                            Campo obrigatório
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field
+                            class="flex-auto w-full max-w-24 sm:max-w-40 ml-2 sm:ml-4">
+                        <mat-label *ngIf="first">Tipo</mat-label>
+                        <mat-icon
+                                [svgIcon]="'heroicons_outline:identification'"
+                                class="hidden sm:flex icon-size-5"
+                                matPrefix></mat-icon>
+                        <input
+                                [formControl]="personalDocument.get('label')"
+                                [placeholder]="'Tipo'"
+                                matInput>
+                    </mat-form-field>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+
+    <div class="mt-1">
+        <mat-form-field
+                class="w-full">
+            <mat-label>Nacionalidade</mat-label>
+            <mat-icon
+                    [svgIcon]="'heroicons_solid:user-circle'"
+                    class="hidden sm:flex icon-size-5"
+                    matPrefix></mat-icon>
+            <input
+                    [formControlName]="'nacionalidade'"
+                    [placeholder]="'Nacionalidade'"
+                    [spellcheck]="false"
+                    matInput>
+        </mat-form-field>
+    </div>
+
+    <!-- Profissão -->
+    <div class="mt-1">
+        <mat-form-field
+                class="w-full">
+            <mat-label>Profissão</mat-label>
+            <mat-icon
+                    [svgIcon]="'heroicons_outline:briefcase'"
+                    class="hidden sm:flex icon-size-5"
+                    matPrefix></mat-icon>
+            <input
+                    [formControlName]="'profissao'"
+                    [placeholder]="'Profissão'"
+                    [spellcheck]="false"
+                    matInput>
+        </mat-form-field>
+    </div>
+
+    <!-- Estado Civil -->
+    <div class="mt-1">
+        <mat-form-field class="w-full">
+            <mat-icon
+                    [svgIcon]="'heroicons_outline:users'"
+                    class="hidden sm:flex icon-size-5"
+                    matPrefix></mat-icon>
+            <mat-label>Estado Civil</mat-label>
+            <input [formControlName]="'estadocivil'"
+                   [matAutocomplete]="maritalStatus"
+                   aria-label="Estado Civil"
+                   matInput
+                   placeholder="Selecione um estado civil"
+                   type="text">
+            <mat-autocomplete #maritalStatus="matAutocomplete" [displayWith]="getMaritalStatusName">
+                <mat-option *ngFor="let maritalStatus of maritalStatusList" [value]="maritalStatus">
+                    {{ maritalStatus.name }}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </div>
+
+    <!-- Data de Nascimento -->
+    <div class="mt-1">
+        <mat-form-field class="w-full">
+            <mat-label>Data de Nascimento</mat-label>
+            <input #dataNascimento [matDatepicker]="picker" formControlName="datanascimento" matInput>
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle [for]="picker" matIconSuffix></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+    </div>
+
+    <app-contacts [form]="form"></app-contacts>
+
+    <app-address-info [cityId]="customer?.person?.cidadeid" [form]="form"></app-address-info>
+
+    <div class="mt-1">
+        <div class="space-y-4">
+            <ng-container
+                    *ngFor="let companyControl of form?.get('companies')['controls']; let i = index; let first = first; let last = last;">
+                <div class="flex">
+                    <mat-form-field class="flex-auto">
+                        <mat-label *ngIf="first">Empresa</mat-label>
+                        <mat-icon [svgIcon]="'heroicons_outline:building-office'"
+                                  class="hidden sm:flex icon-size-5"
+                                  matPrefix></mat-icon>
+                        <input [formControl]="companyControl?.get('empresa')"
+                               [matAutocomplete]="company"
+                               aria-label="Empresa"
+                               matInput
+                               placeholder="Selecione uma empresa"
+                               type="text">
+                        <mat-autocomplete #company="matAutocomplete" [displayWith]="getCompanyName">
+                            <mat-option *ngFor="let company of companies" [value]="company">
+                                {{ company.descricao | titlecase }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <mat-form-field class="flex-auto w-full max-w-24 sm:max-w-40 ml-2 sm:ml-4">
+                        <mat-label *ngIf="first">Cargo</mat-label>
+                        <mat-icon
+                                [svgIcon]="'heroicons_outline:identification'"
+                                class="hidden sm:flex icon-size-5"
+                                matPrefix></mat-icon>
+                        <input #input
+                               (keyup)="positionAutoComplete($event)"
+                               [formControl]="companyControl?.get('cargo')"
+                               [matAutocomplete]="position"
+                               aria-label="Cargo"
+                               matInput
+                               placeholder="Selecione um cargo"
+                               type="text">
+                        <mat-autocomplete #position="matAutocomplete" [displayWith]="getPositionName">
+                            <mat-option *ngFor="let position of positions" [value]="position">
+                                {{ position.nome | titlecase}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+
+                    <!-- Remove Company -->
+                    <ng-container *ngIf="!(first && last)">
+                        <div [ngClass]="{'mb-4': !first}"
+                             class="flex items-center w-10 pl-2">
+                            <button
+                                    (click)="removeCompany(i)"
+                                    class="w-8 h-8 min-h-8"
+                                    mat-icon-button
+                                    matTooltip="Remove">
+                                <mat-icon [svgIcon]="'heroicons_solid:trash'"
+                                          class="icon-size-5"></mat-icon>
+                            </button>
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-container>
+        </div>
+        <div
+                (click)="addNewCompany()"
+                class="group inline-flex items-center mt-2 -ml-4 py-2 px-4 rounded cursor-pointer">
+            <mat-icon
+                    [svgIcon]="'heroicons_solid:plus-circle'"
+                    class="icon-size-5"></mat-icon>
+            <span class="ml-2 font-medium text-secondary group-hover:underline">Adicionar nova empresa</span>
+        </div>
+    </div>
+</form>
+
+<app-actions-form (delete)="delete.emit()"
+                  (save)="save.emit()"
+                  (cancel)="cancel.emit()"
+                  [record]="customer"
+                  [saveDisabled]="form.invalid"></app-actions-form>

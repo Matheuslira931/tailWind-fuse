@@ -1,0 +1,168 @@
+<div class="flex flex-col w-full h-full">
+
+    <!-- Header -->
+    <app-details-header (onClose)="closeDrawer()"
+                        (onEdit)="onClickEdit()"
+                        [imageSrc]="URL_PREFIX + record.brandingProcess[0].urlLogo"
+                        [imageLabel]="record?.brandingProcess[0]?.elementonominativo"
+                        [showIcon]="false"
+                        editLabel="Ver Detalhes"
+                        [viewMode]="!editMode"></app-details-header>
+
+    <!-- View mode -->
+    <ng-container *ngIf="!editMode">
+
+        <!-- Contact -->
+        <div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0">
+            <div class="w-full max-w-3xl">
+                <div class="flex flex-col mt-4 space-y-8">
+                    <div *ngIf="record?.brandingProcess[0]?.elementonominativo"
+                         class="text-4xl font-bold truncate border-b w-full mb-3">
+                        {{record?.brandingProcess[0]?.elementonominativo | titlecase}}
+                    </div>
+
+                    <div *ngIf="record?.numeroprocesso" class="flex sm:items-center">
+                        <mat-icon svgIcon="heroicons_outline:check-badge"></mat-icon>
+                        <div class="ml-6 leading-6">
+                            {{record?.numeroprocesso}}
+                        </div>
+                    </div>
+
+                    <div *ngIf="record?.brandingProcess[0]?.apresentacao" class="flex sm:items-center">
+                        <mat-icon svgIcon="heroicons_outline:star"></mat-icon>
+                        <div class="ml-6 leading-6">
+                            {{record?.brandingProcess[0]?.apresentacao}}
+                        </div>
+                    </div>
+
+                    <div *ngIf="record?.situacaoRegistro?.nome" class="flex sm:items-center">
+                        <mat-icon svgIcon="heroicons_outline:bell"></mat-icon>
+                        <div class="ml-6 leading-6">
+                            {{record?.situacaoRegistro?.nome | titlecase}}
+                        </div>
+                    </div>
+
+                    <div *ngIf="record?.processHolder[0]?.customer?.nome" class="flex sm:items-center">
+                        <mat-icon svgIcon="heroicons_outline:user"></mat-icon>
+                        <div class="ml-6 leading-6">
+                            {{record?.processHolder[0]?.customer?.nome | titlecase}}
+                        </div>
+                    </div>
+
+                    <div *ngIf="record?.processHolder[0]?.company?.razaosocial" class="flex sm:items-center">
+                        <mat-icon svgIcon="heroicons_outline:building-office"></mat-icon>
+                        <div class="ml-6 leading-6">
+                            {{record?.processHolder[0]?.company?.razaosocial | titlecase}}
+                        </div>
+                    </div>
+
+                    <div *ngIf="record?.processHolder[0]?.company?.cnpj" class="flex sm:items-center">
+                        <mat-icon svgIcon="heroicons_outline:identification"></mat-icon>
+                        <div class="ml-6 leading-6">
+                            {{record?.processHolder[0]?.company?.cnpj | cnpjorcpf}}
+                        </div>
+                    </div>
+
+                    <div *ngIf="record?.prioridade" class="flex sm:items-center">
+                        <mat-icon svgIcon="heroicons_outline:calendar"></mat-icon>
+                        <div class="ml-6 leading-6">
+                            {{record?.prioridade  | date : 'dd/MM/yyyy'}} • Prioridade
+                        </div>
+                    </div>
+
+                    <div *ngIf="record?.details?.validity" class="flex sm:items-center">
+                        <mat-icon svgIcon="heroicons_outline:clock"></mat-icon>
+                        <div class="ml-6 leading-6">
+                            {{record?.details?.validity  | date : 'dd/MM/yyyy'}} • Vigência
+                        </div>
+                    </div>
+
+                    <div *ngIf="record?.brandingProcess[0]?.class?.numero"
+                         class="flex sm:items-center">
+                        <mat-icon svgIcon="heroicons_outline:bookmark"></mat-icon>
+                        <div class="ml-6 leading-6">
+                            NCL {{record?.brandingProcess[0]?.class?.numero}}
+                        </div>
+                    </div>
+
+                    <div *ngIf="hasSpecifications()"
+                         class="flex sm:items-center">
+                        <mat-icon svgIcon="heroicons_outline:bars-3-bottom-left"></mat-icon>
+                        <div class="ml-6 leading-6 cursor-pointer"
+                             (click)="showAllSpecifications()"
+                             [matTooltipDisabled]="!showBriefSpecifications"
+                             matTooltip="Ver tudo">
+                            <span *ngIf="showBriefSpecifications">
+                                {{buildSpecifications() | truncate: 100 }}
+                            </span>
+                            <span *ngIf="!showBriefSpecifications">
+                                {{buildSpecifications() }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+
+    <!-- Edit mode -->
+    <ng-container *ngIf="editMode">
+        <!-- Contact form -->
+        <div class="relative flex flex-col flex-auto items-center px-6 sm:px-12 h-full">
+            <div class="w-full h-full">
+                <form [formGroup]="form" class="h-full flex flex-col justify-between">
+
+                    <div>
+                        <mat-form-field
+                                [subscriptSizing]="'dynamic'"
+                                class="w-full">
+                            <mat-label>Name</mat-label>
+                            <mat-icon
+                                    [svgIcon]="'heroicons_solid:user-circle'"
+                                    class="hidden sm:flex icon-size-5"
+                                    matPrefix></mat-icon>
+                            <input
+                                    [formControlName]="'nome'"
+                                    [placeholder]="'Nome'"
+                                    [spellcheck]="false"
+                                    matInput>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Actions -->
+                    <div
+                            class="flex items-center mt-10 -mx-6 sm:-mx-12 py-4 pr-4 pl-1 sm:pr-12 sm:pl-7 border-t bg-gray-50 dark:bg-transparent">
+                        <!-- Delete -->
+                        <button
+                            (click)="delete()"
+                                *ngIf="!!record?.id"
+                                [color]="'warn'"
+                                [matTooltip]="'Excluir'"
+                                mat-button>
+                            Excluir
+                        </button>
+                        <!-- Cancel -->
+                        <button
+                                (click)="toggleEditMode(false)"
+                                [matTooltip]="'Cancelar'"
+                                class="ml-auto"
+                                mat-button>
+                            Cancelar
+                        </button>
+                        <!-- Save -->
+                        <button
+                                (click)="save()"
+                                [color]="'primary'"
+                                [disabled]="form.invalid"
+                                [matTooltip]="'Salvar'"
+                                class="ml-2"
+                                mat-flat-button>
+                            Salvar
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </ng-container>
+</div>

@@ -1,0 +1,107 @@
+<div *ngIf="data">
+    <div class="header mb-2 p-3 content-between">
+        <p>
+            Nº do Processo: {{data.processNumber}}
+        </p>
+        <mat-icon (click)="onCancelClick()" svgIcon="heroicons_outline:x-circle"></mat-icon>
+    </div>
+    <div>
+        <mat-tab-group
+                [animationDuration]="'0'"
+                class="px-2 h-full"
+                mat-stretch-tabs="false">
+
+            <mat-tab *ngIf="shouldShowTab(1)" label="Despacho">
+                <form [formGroup]="form">
+                    <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Despacho</mat-label>
+                        <input [matAutocomplete]="magazines"
+                               aria-label="movementId"
+                               formControlName="movementId"
+                               matInput
+                               required
+                               type="text">
+                        <mat-autocomplete #magazines="matAutocomplete" [displayWith]="getMovementName">
+                            <mat-option *ngFor="let movement of movementList" [value]="movement">
+                                {{ movement.nome }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+
+                    <div class="grid grid-cols-2">
+                        <div class="flex flex-col mr-2">
+                            <div class="mt-1 mr-2">
+                                <mat-form-field appearance="fill" class="w-full">
+                                    <mat-label>N° Revista</mat-label>
+                                    <input [matAutocomplete]="magazines"
+                                           aria-label="magazineNumber"
+                                           formControlName="magazineNumber"
+                                           matInput
+                                           required
+                                           type="text">
+                                    <mat-autocomplete #magazines="matAutocomplete" [displayWith]="getMagazineName">
+                                        <mat-option *ngFor="let magazine of magazineList" [value]="magazine">
+                                            {{ magazine.numerorevista }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="mt-1 mr-2">
+                            <mat-form-field class="w-full">
+                                <mat-label>Data Revista</mat-label>
+                                <input [matDatepicker]="picker" formControlName="magazineDate" matInput>
+                                <mat-hint>DD/MM/YYYY</mat-hint>
+                                <mat-datepicker-toggle [for]="picker" matIconSuffix></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </form>
+            </mat-tab>
+
+            <mat-tab *ngIf="shouldShowTab(2)" label="Protocolo (Petição)">
+
+            </mat-tab>
+
+            <mat-tab *ngIf="shouldShowTab(3)" label="Texto Livre">
+
+            </mat-tab>
+        </mat-tab-group>
+
+        <div class="px-2">
+            <h5 class="h5">
+                ANEXOS DA MOVIMENTAÇÃO
+            </h5>
+
+            <div *ngIf="!!data.attachment && data.attachment.length === 0">
+                <p>Não existem anexos adicionados</p>
+
+                <div class="p-1" style="border: 1px solid black">
+                    <div class="p-1" style="border: 1px solid rgb(128,128,128)">
+                        <p>Sem imagem, arraste o arquivo</p>
+                        <button
+                                (click)="onDropFile()"
+                                [color]="'primary'"
+                                class="mt-1"
+                                mat-flat-button>
+                            Selecionar
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <input #inputFile
+                   (change)="onSelectFile($event)"
+                   accept="image/png,image/jpeg"
+                   class="hidden"
+                   id="file"
+                   name="file"
+                   type="file">
+        </div>
+    </div>
+
+    <div class="mt-1 mr-2">
+        <app-actions-form (cancel)="onCancelClick()" (save)="onSaveClick()" [record]="data"></app-actions-form>
+    </div>
+</div>

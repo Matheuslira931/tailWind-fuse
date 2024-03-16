@@ -1,0 +1,143 @@
+<div class="flex flex-col flex-auto min-w-0 h-full">
+
+    <mat-drawer-container
+        (backdropClick)="onBackdropClicked()"
+        class="flex-auto h-full bg-card dark:bg-transparent">
+
+        <!-- Drawer -->
+        <mat-drawer
+            #matDrawer
+            [mode]="'side'"
+            [opened]="openedSideForm"
+            [position]="'end'"
+            class="w-full sm:w-128 dark:bg-gray-900">
+            <process-form (cancel)="onCancelEditForm()"></process-form>
+        </mat-drawer>
+
+        <mat-drawer-content class="flex flex-col">
+            <!-- Header -->
+            <div class="flex-auto">
+                <app-list-header (newRecord)="new()"
+                                 (search)="search($event)"
+                                 [isLoading]="isLoading"
+                                 [showBorder]="false"
+                                 title="Revistas e Despachos"
+                                 subtitle="1050 RPIs Cadastrados">
+                    <button [matMenuTriggerFor]="adjustmentOptions" class="ml-2" mat-raised-button>
+                        <mat-icon svgIcon="heroicons_outline:adjustments-vertical"></mat-icon>
+                    </button>
+
+                    <mat-menu #adjustmentOptions="matMenu" class="menu">
+                        <div class="flex-col w-full py-1 px-4">
+                            <div class="flex w-full justify-between items-center">
+                                <span>Situação</span>
+                                <mat-slide-toggle>
+                                </mat-slide-toggle>
+                            </div>
+                            <span class="text-xs">Ligado exibe processos ativos. Desligado exibe todos</span>
+                        </div>
+                        <div class="flex-col w-full px-4 py-1">
+                            <div class="flex w-full justify-between items-center">
+                                <span>Sistemarcas</span>
+                                <mat-slide-toggle>
+                                </mat-slide-toggle>
+                            </div>
+                            <span class="text-xs">Ligado exibe processos Sistemarcas. Desligado exibe todos</span>
+                        </div>
+                        <div class="flex-col w-full px-4 pt-1 pb-2">
+                            <div class="flex w-full justify-between items-center">
+                                <span>Prorrogação</span>
+                                <mat-slide-toggle>
+                                </mat-slide-toggle>
+                            </div>
+                            <span class="text-xs">Ligado exibe somente processos em prazo de prorrogação. Desligado exibe todos</span>
+                        </div>
+                        <hr class="m-0">
+                        <button class="flex my-3 px-4">
+                            <span>Atualizar</span>
+                        </button>
+                        <button class="flex mb-2 px-4">
+                            <span>Imprimir</span>
+                        </button>
+                    </mat-menu>
+                </app-list-header>
+            </div>
+
+            <app-list-selector (chose)="onChoose($event)"
+                               (clearFilter)="onClearFilter()"
+                               [collaborators]="options"></app-list-selector>
+            <!-- Main -->
+            <div class="flex-auto border-t -mt-px pt-4 sm:pt-6 h-full" style="background-color: #F1F5F9">
+                <div class="w-full max-w-screen-xl mx-auto h-full">
+                    <div [ngClass]="{'sm:grid-cols-6': !openedSideForm}"
+                         class="grid grid-cols-2 w-full min-w-0 p-4 gap-4">
+                        <div class="sm:col-span-3 lg:col-span-3 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl">
+                            <div class="relative flex flex-col flex-auto">
+                                <div>
+                                    <h5>
+                                        Revistas
+                                    </h5>
+                                </div>
+                                <div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sm:col-span-3 lg:col-span-3 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl">
+                            <div class="relative flex flex-col flex-auto">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h5>
+                                            Ultimas movimentações
+                                        </h5>
+                                        <p>
+                                            RPI 2745
+                                        </p>
+                                    </div>
+                                    <div class="mt-3 sm:mt-0 sm:ml-2">
+                                        <mat-button-toggle-group
+                                            value="today"
+                                            #scheduleDaySelector="matButtonToggleGroup">
+                                            <mat-button-toggle value="today">Today</mat-button-toggle>
+                                            <mat-button-toggle value="tomorrow">Tomorrow</mat-button-toggle>
+                                        </mat-button-toggle-group>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col mt-2 divide-y">
+                                    <ng-container *ngFor="let scheduleItem of data; trackBy: trackByFn">
+                                        <div class="flex flex-row items-center justify-between py-4 px-0.5">
+                                            <div class="flex flex-col">
+                                                <div class="font-medium">{{scheduleItem.title}}</div>
+                                                <div class="flex flex-col sm:flex-row sm:items-center -ml-0.5 mt-2 sm:mt-1 space-y-1 sm:space-y-0 sm:space-x-3">
+                                                    <ng-container>
+                                                        <div class="flex items-center">
+                                                            <mat-icon
+                                                                class="icon-size-5 text-hint"
+                                                                [svgIcon]="'heroicons_solid:map-pin'"></mat-icon>
+                                                            <div class="ml-1.5 text-md text-secondary">{{scheduleItem.status}}</div>
+                                                        </div>
+                                                    </ng-container>
+                                                </div>
+                                            </div>
+                                            <button mat-icon-button>
+                                                <mat-icon [svgIcon]="'heroicons_mini:chevron-right'"></mat-icon>
+                                            </button>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <mat-sidenav #sidenav [(opened)]="openedSideNav" mode="side" position="end">
+
+                    </mat-sidenav>
+                </div>
+            </div>
+
+        </mat-drawer-content>
+
+    </mat-drawer-container>
+
+</div>

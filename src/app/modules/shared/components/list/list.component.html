@@ -1,0 +1,55 @@
+<div
+        class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto"
+>
+    <ng-container *ngIf="page && page.totalRecords; else noRecords">
+        <div class="grid">
+            <div
+                    (matSortChange)="onChangeSort($event)"
+                    [class]="'inventory-grid grid py-4 px-6 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5 ' + gridStyle"
+                    matSort>
+                <div *ngFor="let column of listConfig">
+                    <div *ngIf="column.sort === true; else noSortColumn"
+                         [mat-sort-header]="column.sortKey || column.valueKey">
+                        {{column.column}}
+                    </div>
+                    <ng-template #noSortColumn>
+                        {{column.column}}
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+
+        <ng-container *ngFor="let item of page.records; trackBy: trackByFn">
+            <div [routerLink]="['./', item.id]"
+                 class="grid grid-cols-6 items-center py-3 px-6 border-b cursor-pointer"
+            >
+                <div *ngFor="let column of listConfig" class="truncate">
+                    {{item[column.valueKey] }}
+                </div>
+            </div>
+        </ng-container>
+    </ng-container>
+
+    <ng-template #noRecords>
+        <div
+                class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center"
+        >
+            Não existem registros.
+        </div>
+    </ng-template>
+</div>
+
+
+<mat-paginator
+        #paginator
+        (page)="handlePageEvent($event)"
+        *ngIf="showPaginator"
+        [length]="length"
+        [ngClass]="{ 'pointer-events-none': isLoading }"
+        [pageIndex]="pageIndex"
+        [pageSizeOptions]="pageSizeOptions"
+        [pageSize]="pageSize"
+        aria-label="Selecione a página"
+        class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-50 dark:bg-transparent"
+>
+</mat-paginator>

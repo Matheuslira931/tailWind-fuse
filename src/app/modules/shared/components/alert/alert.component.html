@@ -1,0 +1,36 @@
+<fuse-alert *ngIf="showByTypeName.get(AlertType.INSERT_SUCCESS)"
+    [appearance]="'soft'"
+    [dismissible]="true"
+    [dismissed]="false"
+    [name]="'successInsert'"
+    [type]="'success'">
+    Registro salvo com sucesso.
+</fuse-alert>
+
+<fuse-alert *ngIf="showByTypeName.get(AlertType.UPDATE_SUCCESS)"
+    [appearance]="'soft'"
+    [dismissible]="true"
+    [dismissed]="false"
+    [name]="'successUpdate'"
+    [type]="'info'">
+    Registro atualizado com sucesso.
+</fuse-alert>
+
+<fuse-alert *ngIf="showByTypeName.get(AlertType.ERROR)"
+    [appearance]="'soft'"
+    [dismissible]="true"
+    [dismissed]="false"
+    [name]="'error'"
+    [type]="'error'">
+    Ocorreu um erro inesperado, tente novamente mais tarde.
+</fuse-alert>
+
+<fuse-alert *ngIf="showByTypeName.get(AlertType.DELETE_SUCCESS)"
+            [appearance]="'soft'"
+            [dismissible]="true"
+            [dismissed]="false"
+            [name]="'error'"
+            [type]="'warning'">
+    Registro excluído com sucesso.
+</fuse-alert>
+

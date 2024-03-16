@@ -1,0 +1,44 @@
+th {
+    text-align: start;
+}
+
+.brand-picture {
+    width: 48px;
+    height: 48px;
+}
+
+.avoid-text-break {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.inventory-grid {
+    grid-template-columns: 5% 10% 25% 10% 5% 25% 20% !important;
+}
+
+@media (max-width: 1400px) {
+    .inventory-grid {
+        grid-template-columns: 5% 30% 20% 25% 25% !important;
+    }
+
+    .optional-columns {
+        display: none !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .inventory-grid {
+        grid-template-columns: 80px 26% auto !important;
+    }
+
+    .new-button-label {
+        display: none;
+    }
+}
+
+@media (max-width: 750px) {
+    .optional-columns {
+        display: none !important;
+    }
+}

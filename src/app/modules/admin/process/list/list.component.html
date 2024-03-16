@@ -1,0 +1,164 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+    <mat-drawer-container (backdropClick)="closeDrawer()" class="flex-auto h-full bg-card dark:bg-transparent">
+        <!-- Drawer -->
+        <mat-drawer
+            #matDrawer
+            [disableClose]="true"
+            [mode]="'over'"
+            [ngClass]="{
+                'w-full md:w-full dark:bg-gray-900': fullscreen,
+                'w-full md:w-160 dark:bg-gray-900': !fullscreen
+             }"
+            [opened]="false"
+            [position]="'end'"
+            class="w-full md:w-160 dark:bg-gray-900">
+            <router-outlet></router-outlet>
+        </mat-drawer>
+
+        <mat-drawer-content class="flex flex-col">
+
+            <!-- Main -->
+            <div class="flex-auto">
+                <app-list-header (newRecord)="newProcess()"
+                                 (search)="search($event)"
+                                 [isLoading]="isLoading"
+                                 [showBorder]="false"
+                                 [title]="listTitle">
+                    <button [matMenuTriggerFor]="adjustmentOptions" class="ml-2" mat-raised-button>
+                        <mat-icon svgIcon="heroicons_outline:adjustments-vertical"></mat-icon>
+                    </button>
+
+                    <mat-menu #adjustmentOptions="matMenu" class="menu">
+                        <div class="flex-col w-full py-1 px-4">
+                            <div class="flex w-full justify-between items-center">
+                                <span>Situação</span>
+                                <mat-slide-toggle [checked]="filterState.OnlyActive"
+                                                  [color]="'primary'"
+                                                  (change)="onChangeSituationFilterFlag($event)">
+                                </mat-slide-toggle>
+                            </div>
+                            <span class="text-xs">Ligado exibe processos ativos. Desligado exibe todos</span>
+                        </div>
+                        <div class="flex-col w-full px-4 py-1">
+                            <div class="flex w-full justify-between items-center">
+                                <span>Sistemarcas</span>
+                                <mat-slide-toggle [checked]="filterState.Internal"
+                                                  [color]="'primary'"
+                                                  (change)="onChangeExternalFilterFlag($event)">
+                                </mat-slide-toggle>
+                            </div>
+                            <span class="text-xs">Ligado exibe processos Sistemarcas. Desligado exibe todos</span>
+                        </div>
+                        <div class="flex-col w-full px-4 pt-1 pb-2">
+                            <div class="flex w-full justify-between items-center">
+                                <span>Prorrogação</span>
+                                <mat-slide-toggle [checked]="filterState.InExtension"
+                                                  [color]="'primary'"
+                                                  (change)="onChangeProrrogacaoFilterFlag($event)">
+                                </mat-slide-toggle>
+                            </div>
+                            <span class="text-xs">Ligado exibe somente processos em prazo de prorrogação. Desligado exibe todos</span>
+                        </div>
+                        <hr class="m-0">
+                        <button class="flex my-3 px-4">
+                            <span>Atualizar</span>
+                        </button>
+                        <button class="flex mb-2 px-4">
+                            <span>Imprimir</span>
+                        </button>
+                    </mat-menu>
+                </app-list-header>
+
+                <app-list-selector (chose)="onChooseCollaborator($event)"
+                                   (clearFilter)="onClearFilter()"
+                                   [collaborators]="collaborators"></app-list-selector>
+
+                <div class="flex flex-auto">
+                    <ng-container *ngIf="page.records.length; else noRecords">
+                        <ng-container *ngIf="page.records && page.totalRecords; else noRecords">
+                            <table (matSortChange)="sortData($event)" class="grid w-full" matSort matSortDisableClear>
+                                <!-- Header -->
+                                <tr class="inventory-grid grid py-4 px-6 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5">
+                                    <th></th>
+                                    <th [mat-sort-header]="'numeroProcesso'" class="text-start">Processo</th>
+                                    <th [mat-sort-header]="'elementoNominativo'" class="text-start">Elemento
+                                        Nominativo
+                                    </th>
+                                    <th [mat-sort-header]="'prioridade'"
+                                        class="hidden sm:block optional-columns text-start">
+                                        Prioridade
+                                    </th>
+                                    <th [mat-sort-header]="'ncl'"
+                                        class="hidden lg:block optional-columns text-start">
+                                        NCL
+                                    </th>
+                                    <th [mat-sort-header]="'titular'"
+                                        class="hidden lg:block optional-columns text-start">
+                                        Titular
+                                    </th>
+                                    <th [mat-sort-header]="'situacao'"
+                                        class="hidden lg:block text-start">
+                                        Situação
+                                    </th>
+                                </tr>
+                                <!-- ROWS -->
+                                <tr *ngFor="let item of page.records; trackBy: trackByFn">
+                                    <div [routerLink]="['./', item.id]"
+                                         class="grid inventory-grid items-center py-3 px-6 border-b cursor-pointer">
+                                        <div class="truncate">
+                                            <img *ngIf="item?.urlLogo"
+                                                 [src]="URL_PREFIX + item?.urlLogo"
+                                                 class="brand-picture">
+                                        </div>
+                                        <div class="truncate avoid-text-break">
+                                            {{ item?.numeroProcesso }}
+                                        </div>
+                                        <!-- Nome -->
+                                        <div [matTooltip]="item?.elementoNominativo"
+                                             class="truncate avoid-text-break">
+                                            {{ item?.elementoNominativo }}
+                                        </div>
+                                        <!-- CPF / CNPJ -->
+                                        <div class="hidden sm:block optional-columns avoid-text-break">
+                                            {{ item?.prioridade | date : 'dd/MM/yyyy'}}
+                                        </div>
+                                        <!-- E-mail-->
+                                        <div class="hidden sm:block optional-columns avoid-text-break">
+                                            {{ item?.ncl }}
+                                        </div>
+                                        <!-- Telefone-->
+                                        <div [matTooltip]="item?.titular"
+                                             class="hidden lg:block optional-columns avoid-text-break pe-3">
+                                            {{ item?.titular | titlecase }}
+                                        </div>
+                                        <div [matTooltip]="item?.situacao" class="hidden lg:block avoid-text-break">
+                                            {{ item?.situacao | titlecase }}
+                                        </div>
+                                    </div>
+                                </tr>
+                            </table>
+                        </ng-container>
+                    </ng-container>
+                    <ng-template #noRecords>
+                        <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">
+                            {{ emptyMessage }}
+                        </div>
+                    </ng-template>
+                </div>
+
+                <mat-paginator
+                    #paginator
+                    (page)="handlePageEvent($event)"
+                    [length]="length"
+                    [ngClass]="{ 'pointer-events-none': isLoading }"
+                    [pageIndex]="pageIndex"
+                    [pageSizeOptions]="pageSizeOptions"
+                    [pageSize]="pageSize"
+                    [showFirstLastButtons]="true"
+                    aria-label="Selecione a página"
+                >
+                </mat-paginator>
+            </div>
+        </mat-drawer-content>
+    </mat-drawer-container>
+</div>
