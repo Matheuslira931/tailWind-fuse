@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Contact, Customer, CustomerType } from "../../../customers.types";
+import { Contact, Customer, CustomerType, Person } from "../../../customers.types";
 import { CompanySize } from "../../../../../shared/models/company-size.model";
 import { CompanySizeService } from "../../../../../shared/services/company-size/company-size.service";
 import { CityService } from "../../../../../shared/services/city/city.service";
@@ -20,6 +20,8 @@ import {
 import { ViewBaseComponent } from "../view.base";
 import { StringHelper } from "../../../../../shared/helpers/string.helper";
 import { CepMaskPipe } from "../../../../../shared/pipes/cep-mask.pipe";
+import { map, switchMap } from "rxjs";
+import { PeopleService } from "../../../people.service";
 
 @Component({
     selector: 'app-customer-pj-view',
@@ -49,11 +51,13 @@ export class CustomerPjViewComponent extends ViewBaseComponent implements OnInit
                 public _stateService: StateService,
                 public _contactTypeService: ContactTypeService,
                 public _cepMaskPipe: CepMaskPipe,
+                public _peopleService: PeopleService,
                 public _activatedRoute: ActivatedRoute) {
         super(_router, _cityService, _stateService, _countryService, _contactTypeService, _activatedRoute, _customerService, _cepMaskPipe);
     }
 
     ngOnInit(): void {
+        this.loadByPersonNewEndpoint();
         this.responsibles = this.customer?.customerCompany
             .filter(customerCompany => customerCompany.cargoid === ID_COMPANY_RESPONSIBLE)
             .map(customerCompany => customerCompany.customer);
@@ -63,6 +67,18 @@ export class CustomerPjViewComponent extends ViewBaseComponent implements OnInit
         this.emails = this.customer?.person?.contacts.filter((contact: Contact) => contact.contactTypeId === EMAIL_TYPE_CONTACT_GROUP) ?? [];
         this.loadCustomer();
         this.loadStateAndCity();
+    }
+
+    private loadByPersonNewEndpoint() {
+        console.log('chegou aqui');
+        this._activatedRoute.params
+            .pipe(
+                map((params: { id: number }) => params.id),
+                switchMap(customerId => this._peopleService.getById(customerId)))
+            .subscribe((person: Person) => {
+                console.log('person');
+                console.log(person);
+            });
     }
 
     afterLoadCustomer(): void {

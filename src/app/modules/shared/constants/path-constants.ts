@@ -1,6 +1,7 @@
 export const USER_ROUTE = '/users/';
 export const POSITIONS_ROUTE = '/records/positions/';
 export const CUSTOMER_ROUTE = '/customers/';
+export const PERSONS_ROUTE = '/persons/';
 export const PROCESS_ROUTE = '/brandingprocesses/';
 export const COLLABORATORS_ROUTE = '/collaborators/';
 export const CITY_ROUTE = '/records/cities/';

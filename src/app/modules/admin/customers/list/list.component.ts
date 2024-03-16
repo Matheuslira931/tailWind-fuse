@@ -17,7 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { CustomersService } from "../customers.service";
-import { Customer, CustomerFilterType, CustomerList, CustomerType } from "../customers.types";
+import { Customer, CustomerFilterType, CustomerList, CustomerType, PersonList } from "../customers.types";
 import { BaseListComponent } from "../../../shared/components/base/base-list.component";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatPaginatorModule } from "@angular/material/paginator";
@@ -29,6 +29,7 @@ import { HttpParams } from "@angular/common/http";
 import { HeaderListComponent } from "../../../shared/components/header-list/header-list.component";
 import { Page } from "../../../shared/models/page.model";
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { PeopleService } from "../people.service";
 
 @Component({
     selector: 'customers-list',
@@ -44,10 +45,11 @@ export class CustomersListComponent extends BaseListComponent<CustomerList, Cust
     customerType = CustomerType;
     customerTypeFilter = CustomerFilterType;
     sort!: Sort;
-    records!: Page<CustomerList>;
+    records!: Page<PersonList>;
 
     constructor(
         public _service: CustomersService,
+        public _peopleService: PeopleService,
     ) {
         super(_service);
     }
@@ -55,6 +57,13 @@ export class CustomersListComponent extends BaseListComponent<CustomerList, Cust
     ngOnInit() {
         super.ngOnInit();
         this.reloadList();
+        console.log('this.records');
+        console.log(this.records);
+        this._peopleService.getItemsPaged().subscribe(value => {
+            console.log('value');
+            console.log(value);
+            this.records = value;
+        });
     }
 
     search(query: string) {

@@ -5,7 +5,7 @@ import { ContactTypeService } from "../../../../../shared/services/contact-type/
 import { CountryService } from "../../../../../shared/services/country/country.service";
 import { StateService } from "../../../../../shared/services/state/state.service";
 import { filterLegalResponsiblePosition } from "../../../customers.constants";
-import { Customer, CustomerCompany, CustomerType } from "../../../customers.types";
+import { Customer, CustomerCompany, CustomerType, Person } from "../../../customers.types";
 import { CityService } from "../../../../../shared/services/city/city.service";
 import { CustomersService } from "../../../customers.service";
 import { DatePipe, NgForOf, NgIf, TitleCasePipe } from "@angular/common";
@@ -16,6 +16,8 @@ import { ViewBaseComponent } from "../view.base";
 import { MaritalStatusService } from "../../../../../shared/services/marital-status/marital-status.service";
 import { StringHelper } from "../../../../../shared/helpers/string.helper";
 import { CepMaskPipe } from "../../../../../shared/pipes/cep-mask.pipe";
+import { PeopleService } from "../../../people.service";
+import { map, switchMap } from "rxjs";
 
 @Component({
     selector: 'app-customer-pf-view',
@@ -45,16 +47,29 @@ export class CustomerPfViewComponent extends ViewBaseComponent implements OnInit
                 public _countryService: CountryService,
                 public _stateService: StateService,
                 public _activatedRoute: ActivatedRoute,
+                public _peopleService: PeopleService,
                 public _cepMaskPipe: CepMaskPipe) {
         super(_router, _cityService, _stateService, _countryService, _contactTypeService, _activatedRoute, _customerService, _cepMaskPipe);
     }
 
     ngOnInit(): void {
+        this.loadByPersonNewEndpoint();
         this.afterLoadCustomer();
         this.loadCustomer();
         this.loadContactTypes();
         this.loadMaritalStatus();
         this.loadStateAndCity();
+    }
+
+    private loadByPersonNewEndpoint() {
+        this._activatedRoute.params
+            .pipe(
+                map((params: { id: number }) => params.id),
+                switchMap(customerId => this._peopleService.getById(customerId)))
+            .subscribe((person: Person) => {
+                console.log('person');
+                console.log(person);
+            });
     }
 
     getCompanyName(customerCompany: CustomerCompany): string {

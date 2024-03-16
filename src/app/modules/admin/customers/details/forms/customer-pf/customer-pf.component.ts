@@ -10,7 +10,7 @@ import {
     ViewChildren
 } from '@angular/core';
 import { FormArray, ReactiveFormsModule, UntypedFormArray, UntypedFormBuilder, Validators } from '@angular/forms';
-import { debounceTime, finalize, zip } from 'rxjs';
+import { debounceTime, finalize, map, switchMap, zip } from 'rxjs';
 import { CustomerBaseFormComponent } from '../customer-base-form.component';
 import { DatePipe, NgClass, NgForOf, NgIf, TitleCasePipe } from '@angular/common';
 import { HttpParams } from '@angular/common/http';
@@ -34,7 +34,7 @@ import {
     PROFISSAO_FORM_PATH
 } from "../../../customers-forms.constants";
 import { MaritalStatus } from "../../../../../shared/models/marital-status.model";
-import { Contact, ContactType, Customer, CustomerCompanyPair } from "../../../customers.types";
+import { Contact, ContactType, Customer, CustomerCompanyPair, Person } from "../../../customers.types";
 import { CountryService } from "../../../../../shared/services/country/country.service";
 import { StateService } from "../../../../../shared/services/state/state.service";
 import { CityService } from "../../../../../shared/services/city/city.service";
@@ -60,6 +60,8 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { DateAdapter, MatNativeDateModule } from "@angular/material/core";
 import moment from "moment";
 import { DateProvider } from "../../../../../shared/providers/date.provider";
+import { ActivatedRoute } from "@angular/router";
+import { PeopleService } from "../../../people.service";
 
 const PJ_TYPE = 2;
 
@@ -110,6 +112,8 @@ export class CustomerPfComponent extends CustomerBaseFormComponent implements On
                 protected _titleCasePipe: TitleCasePipe,
                 private _maritalStatusService: MaritalStatusService,
                 private _positionService: RolesService,
+                private _activatedRoute: ActivatedRoute,
+                private _peopleService: PeopleService,
                 private _contactTypeService: ContactTypeService,
                 private _customerFormProvider: CustomerFormProvider,
                 private dateAdapter: DateAdapter<any>,
@@ -123,12 +127,27 @@ export class CustomerPfComponent extends CustomerBaseFormComponent implements On
     }
 
     ngOnInit(): void {
+        this.loadByPersonNewEndpoint();
         moment.locale('pt-BR');
         this.dateAdapter.setLocale('pt-br');
         this.loadLists();
         // this.addFilters();
+        console.log('this.customer');
+        console.log(this.customer);
         this.handleInputsCases();
         this.handleCompanyAutocompleteOnFormChange();
+    }
+
+    private loadByPersonNewEndpoint() {
+        console.log('chegou aqui');
+        this._activatedRoute.params
+            .pipe(
+                map((params: { id: number }) => params.id),
+                switchMap(customerId => this._peopleService.getById(customerId)))
+            .subscribe((person: Person) => {
+                console.log('person');
+                console.log(person);
+            });
     }
 
     buildPayload(): any {

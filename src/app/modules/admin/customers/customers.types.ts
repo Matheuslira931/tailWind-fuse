@@ -1,5 +1,5 @@
-import {BaseModel} from "app/modules/shared/models/base.model";
-import {Position} from "../roles/roles.types";
+import { BaseModel } from "app/modules/shared/models/base.model";
+import { Position } from "../roles/roles.types";
 
 export interface Customer extends BaseModel {
     personId: number;
@@ -34,6 +34,16 @@ export interface CustomerCompany extends BaseModel {
     descricao?: Company;
 }
 
+export interface CustomerCompanyV2 extends BaseModel {
+    PersonBaseId?: number;
+    PersonMemberId?: number;
+    cargoid?: number;
+    position?: Position;
+    customer?: Customer;
+    company?: Company;
+    descricao?: Company;
+}
+
 export interface Company extends BaseModel {
     razaosocial: string;
     fantasia: string;
@@ -58,6 +68,18 @@ export interface Person extends BaseModel {
     internacional: boolean;
     pre_cadastro: boolean;
     contacts: Contact[];
+    team: CustomerCompanyV2[];
+}
+
+export interface PersonList {
+    personId: number;
+    descricao: string;
+    documento: string;
+    email: string;
+    telefone: string;
+    representante: string | null;
+    tipo: number;
+    tipoDesc: string;
 }
 
 export interface ContactType {
@@ -100,7 +122,7 @@ export interface PersonCustomer {
     fantasia: string;
     cnpj: string;
     inscricaoestadual: string;
-    customerCompany: CustomerCompany[];
+    team: CustomerCompany[];
 }
 
 // export interface Person extends BaseModel {
